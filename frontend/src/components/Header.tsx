@@ -1,6 +1,5 @@
 import { Link } from '@tanstack/react-router'
 
-import ClerkHeader from '../integrations/clerk/header-user.tsx'
 
 import { useState } from 'react'
 import { Globe, Home, Menu, X } from 'lucide-react'
