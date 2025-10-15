@@ -6,5 +6,4 @@ public class UserProfile {
     private GitHubUser user;
     private List<String> skills;
     private List<Project> projects;
-    private List<Skill> skills;
 }
