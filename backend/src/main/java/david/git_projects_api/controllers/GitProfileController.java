@@ -1,5 +1,6 @@
 package david.git_projects_api.controllers;
 
+import david.git_projects_api.dtos.ClerkUserDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -25,6 +26,7 @@ public class GitProfileController {
      */
     @GetMapping("/key")
     public String key(@AuthenticationPrincipal Jwt jwt) {
+        ClerkUserDto dto = ClerkUserDto.jwtToDto(jwt);
         return "Hello " + jwt.getClaim("email");
     }
 
