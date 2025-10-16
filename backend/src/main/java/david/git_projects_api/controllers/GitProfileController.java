@@ -16,13 +16,20 @@ public class GitProfileController {
         return ResponseEntity.ok().body(repos);
     }
 
+    /**
+     * Checks if the user is registered in db.
+     * If not registers user and creates an api key.
+     *
+     * @param jwt the JWT of the authenticated user
+     * @return Api key and usageDetails
+     */
+    @GetMapping("/key")
+    public String key(@AuthenticationPrincipal Jwt jwt) {
+        return "Hello " + jwt.getClaim("email");
+    }
+
     @GetMapping("/health")
     public ResponseEntity<?> health() {
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/me")
-    public String me(@AuthenticationPrincipal Jwt jwt) {
-        return "Hello " + jwt.getClaim("email");
     }
 }

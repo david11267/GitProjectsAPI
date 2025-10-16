@@ -1,8 +1,6 @@
 package david.git_projects_api.domain;
-
 import lombok.Getter;
 import lombok.Setter;
-
 @Getter
 @Setter
 public class GitHubUser {
