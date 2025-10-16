@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SignedIn, SignedOut, SignIn, SignInButton, useAuth, UserButton, useUser } from "@clerk/clerk-react";
-import Container from "@/components/Container";
+import Container from "@/components/BentoComponents/Container";
+import ApiKey from "@/components/BentoComponents/ApiKey";
 
 export const Route = createFileRoute("/")({
   component: App,
@@ -14,7 +15,7 @@ function App() {
     try {
       const token = await getToken({ template: "GitProjectsAPIBackend" }); // fetch a valid JWT
 
-      const response = await fetch("http://localhost:8080/api/me", {
+      const response = await fetch("http://localhost:8080/api/key", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -32,25 +33,34 @@ function App() {
   }
 
   if (!isSignedIn) {
-    return <SignIn />;
+    return (
+      <div className="h-screen w-screen flex items-center justify-center p-8  ">
+        <SignIn />
+      </div>
+    );
   }
 
   return (
-    <div>
-      <Container>
-        Welcome! {user.firstName}
-        <div>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
+    <div className="h-screen w-screen flex items-center justify-center p-8  ">
+      <div className="grid grid-cols-4 gap-4 text-white">
+        <div className="col-span-4">
+          <UserButton />
         </div>
-        <button className="bg-amber-400 cursor-pointer" onClick={() => testFetch()}>
-          jwt test /me endpoint
-        </button>
-      </Container>
+        <Container>
+          <button onClick={() => testFetch()} className="cursor-pointer">
+            Test /api/key
+          </button>
+        </Container>
+        <Container className="col-span-3">
+          <ApiKey />
+        </Container>
+        <Container>
+          <p>Remaining api calls</p>
+          <p>Refresh quota dateTime</p>
+        </Container>
+        <Container className="col-span-2">Api key usage timeline graph</Container>
+        <Container className="col-span-2">Api key options</Container>
+      </div>
     </div>
   );
 }

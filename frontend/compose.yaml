@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  git_projects_db:
+    image: postgres:15 # Latest stable PostgreSQL image
+    container_name: GitProjectsApiDb
+    environment:
+      POSTGRES_USER: admin #change these later
+      POSTGRES_PASSWORD: password #change these later
+      POSTGRES_DB: GitProjectsApiDb
+    ports:
+      - "5432:5432" # Maps host port 5432 to container port 5432
+    volumes:
+      - gitprojectsdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  gitprojectsdata:
