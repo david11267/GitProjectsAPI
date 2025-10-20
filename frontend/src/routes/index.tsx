@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SignedIn, SignedOut, SignIn, SignInButton, useAuth, UserButton, useUser } from "@clerk/clerk-react";
+import { SignIn, useAuth, UserButton, useUser } from "@clerk/clerk-react";
 import Container from "@/components/BentoComponents/Container";
 import ApiKey from "@/components/BentoComponents/ApiKey";
 
@@ -8,7 +8,7 @@ export const Route = createFileRoute("/")({
 });
 
 function App() {
-  const { isSignedIn, user, isLoaded } = useUser();
+  const { isSignedIn } = useUser();
   const { getToken } = useAuth(); // get Clerk's token helper
 
   async function testFetch() {
