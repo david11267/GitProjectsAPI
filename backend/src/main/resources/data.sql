@@ -9,8 +9,15 @@ VALUES (
   'david11267',
   'david.aslan1999@gmail.com',
   'profileImage -> https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ2l0aHViL2ltZ18zNDV5Vm9YbGVGR0VtVEhrdzB6UzVWVUNhTFoifQ'
-)
-ON CONFLICT (id) DO NOTHING;
+),
+(
+     'aliceId123',
+     'Alice',
+     'Wonderland',
+     'Alice11267',
+     'alice.wonderland@gmail.com',
+     'https://static.wikia.nocookie.net/disney/images/7/75/Profile_-_Alice.jpeg/revision/latest?cb=20250104014515'
+   );
 
 
 -------SEED Skills DATA----------
@@ -28,4 +35,7 @@ INSERT INTO user_skills (user_id, skill_id)
 VALUES
 ('user_345yViqMz3J7ScZ637mYj0VydRk', 1),  -- David knows Java
 ('user_345yViqMz3J7ScZ637mYj0VydRk', 2),  -- David knows Spring Boot
-('user_345yViqMz3J7ScZ637mYj0VydRk', 3);  -- David knows Communication
+('user_345yViqMz3J7ScZ637mYj0VydRk', 3),  -- David knows Communication
+
+('aliceId123', 2),  -- Alice knows Spring Boot
+('aliceId123', 3);  -- Alice knows Communication
