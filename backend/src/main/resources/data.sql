@@ -11,3 +11,21 @@ VALUES (
   'profileImage -> https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ2l0aHViL2ltZ18zNDV5Vm9YbGVGR0VtVEhrdzB6UzVWVUNhTFoifQ'
 )
 ON CONFLICT (id) DO NOTHING;
+
+
+-------SEED Skills DATA----------
+
+INSERT INTO skills (id, name, description, icon_url, type)
+VALUES
+(1, 'Java', 'Java programming language', 'https://example.com/java.png', 'Language'),
+(2, 'Spring Boot', 'Spring Boot framework', 'https://example.com/spring.png', 'Framework'),
+(3, 'Communication', 'Verbal and written communication skills', 'https://example.com/communication.png', 'Other');
+
+-- ----------------------------
+-- User-Skills Join Table
+-- ----------------------------
+INSERT INTO user_skills (user_id, skill_id)
+VALUES
+('user_345yViqMz3J7ScZ637mYj0VydRk', 1),  -- David knows Java
+('user_345yViqMz3J7ScZ637mYj0VydRk', 2),  -- David knows Spring Boot
+('user_345yViqMz3J7ScZ637mYj0VydRk', 3);  -- David knows Communication

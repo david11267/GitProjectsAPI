@@ -8,7 +8,8 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
-
+@Entity
+@Table(name = "skills")
 public class Skill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +17,7 @@ public class Skill {
 
     private String name;
     private String description;
-    private String icon;
+    private String iconUrl;
 
     @Enumerated(EnumType.STRING)
     private SkillType type;
