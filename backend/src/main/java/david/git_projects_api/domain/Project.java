@@ -5,9 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+@Entity
 public class Project
 {
     @Id
@@ -32,10 +33,18 @@ public class Project
 
     // Custom / derived fields
     private List<String> dependencies;
-    private List<Skill> skills; //contains languages, frameworks, tools, other
     private String architecture;
     private String readmeSummary;
-    private double sizeInKB;
+    @Column(name = "size_in_kb")
+    private int sizeInKB;
+
+    @ManyToMany
+    @JoinTable(
+            name = "project_skills",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id")
+    )
+    private List<Skill> skills = new ArrayList<>();
 
 
 
