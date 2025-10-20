@@ -4,4 +4,5 @@ public enum SkillType {
     Language,
     Framework,
     Tool,
+    Other
 }

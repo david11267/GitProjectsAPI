@@ -2,16 +2,27 @@ spring:
   application:
     name: git_projects_api
 
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        type:
+          preferred_uuid_jdbc_type: CHAR
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: ${POSTGRES_USERNAME}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://aws-1-eu-north-1.pooler.supabase.com:6543/postgres?user=postgres.${POSTGRES_USERNAME}&password=${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
-    jpa:
-      hibernate:
-        ddl-auto: update
 
+  config:
+    import: optional:file:.env[.properties]
+
+  sql:
+    init:
+      mode: always
 
   security:
     oauth2:
