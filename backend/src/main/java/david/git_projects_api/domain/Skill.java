@@ -9,7 +9,6 @@ public class Skill {
     private int id;
     private String name;
     private String description;
-    private String iconUrl;
 
     @Enumerated(EnumType.STRING)
     private SkillType type;

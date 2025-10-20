@@ -1,6 +1,8 @@
 package david.git_projects_api.controllers;
 
-import david.git_projects_api.dtos.ClerkUserDto;
+import david.git_projects_api.domain.User;
+import david.git_projects_api.dtos.UserDto;
+import david.git_projects_api.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -11,6 +13,11 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/api")
 public class GitProfileController {
+    UserService userService;
+
+    public GitProfileController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/projects")
     public ResponseEntity<?> getProjects(@RequestBody ArrayList<String> repos) {
@@ -26,7 +33,8 @@ public class GitProfileController {
      */
     @GetMapping("/key")
     public String key(@AuthenticationPrincipal Jwt jwt) {
-        ClerkUserDto dto = ClerkUserDto.jwtToDto(jwt);
+        UserDto dto = UserDto.jwtToDto(jwt);
+        User user = userService.getOrCreateUser(dto);
         return "Hello " + jwt.getClaim("email");
     }
 
