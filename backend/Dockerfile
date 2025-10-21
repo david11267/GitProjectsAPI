@@ -12,7 +12,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # ========== RUNTIME STAGE ==========
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 
 # Set a lightweight non-root user for security
 RUN addgroup -S spring && adduser -S spring -G spring
