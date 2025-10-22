@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class GitProfileController {
     UserService userService;
 
