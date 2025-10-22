@@ -16,7 +16,7 @@ function App() {
       const token = await getToken({ template: "GitProjectsAPIBackend" }); // fetch a valid JWT
       const baseUrl: string = import.meta.env.VITE_API_BASE_URL;
 
-      const response = await fetch(`Bearer ${baseUrl}/api/key`, {
+      const response = await fetch(`${baseUrl}/api/key`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -38,7 +38,7 @@ function App() {
     try {
       const token = await getToken({ template: "GitProjectsAPIBackend" }); // fetch a valid JWT
 
-      const response = await fetch(`Bearer ${baseUrl}/api/health`, {
+      const response = await fetch(`${baseUrl}/api/health`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
