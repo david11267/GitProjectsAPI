@@ -41,6 +41,6 @@ public class GitProfileController {
 
     @GetMapping("/health")
     public ResponseEntity<?> health() {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("health check is good");
     }
 }
