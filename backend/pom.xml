@@ -12,7 +12,7 @@
 	<artifactId>git_projects_api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>git_projects_api</name>
-	<description>api to sync your github profile to external sites and tools.</description>
+	<description>api to sync your GitHub profile to external sites and tools.</description>
 	<url/>
 	<licenses>
 		<license/>
