@@ -12,8 +12,15 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin
-public class GitProfileController {
+@CrossOrigin(
+        origins = {
+                "https://git-projects-api-frontend.vercel.app",
+                "http://localhost:3000"   // keep this for local dev
+        },
+        allowedHeaders = {"Authorization", "Content-Type", "Accept"},
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS},
+        allowCredentials = "true"
+)public class GitProfileController {
     UserService userService;
 
     public GitProfileController(UserService userService) {
