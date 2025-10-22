@@ -14,7 +14,7 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         // DO NOT use "*" if you will allow credentials. Use exact origin(s).
-        config.setAllowedOrigins(Arrays.asList("https://git-projects-api-frontend.vercel.app"));
+        config.setAllowedOrigins(Arrays.asList("https://git-projects-api-frontend.vercel.app","http://localhost:3000"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
         config.setAllowCredentials(true);
