@@ -15,11 +15,20 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Frontend origin (change if needed)
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000","https://git-projects-api-frontend-jwp1nehoh-david11267s-projects.vercel.app"));
+        // Frontend origins
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:3000",
+                "https://git-projects-api-frontend-jwp1nehoh-david11267s-projects.vercel.app"
+        ));
+
+        // HTTP methods allowed
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true); // Required if sending Authorization header
+
+        // Allow headers your frontend sends (especially Authorization)
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
+
+        // Required if sending cookies or Authorization header
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
