@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
 public class GitProfileController {
     UserService userService;
 
