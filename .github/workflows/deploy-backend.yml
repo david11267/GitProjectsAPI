@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "backend/**" # Trigger only if /backend changes
+  workflow_dispatch: # <-- this allows manual triggering
 
 jobs:
   build-and-deploy:
