@@ -1,5 +1,5 @@
 # ========== BUILD STAGE ==========
-FROM maven:3.9.11-eclipse-temurin-25 AS builder
+FROM maven:3.9.11-eclipse-temurin-21 AS builder
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # ========== RUNTIME STAGE ==========
-FROM eclipse-temurin:25-jre-alpine
+FROM eclipse-temurin:21-jdk-alpine
 
 # Set a lightweight non-root user for security
 RUN addgroup -S spring && adduser -S spring -G spring
