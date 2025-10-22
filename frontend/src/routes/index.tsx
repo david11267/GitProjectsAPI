@@ -14,8 +14,9 @@ function App() {
   async function testFetch() {
     try {
       const token = await getToken({ template: "GitProjectsAPIBackend" }); // fetch a valid JWT
+      const baseUrl: string = import.meta.env.VITE_API_BASE_URL;
 
-      const response = await fetch("http://localhost:8080/api/key", {
+      const response = await fetch(`Bearer ${baseUrl}/api/key`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
