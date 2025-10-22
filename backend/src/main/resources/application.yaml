@@ -16,14 +16,16 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   datasource:
-
-    url: jdbc:postgresql://aws-1-eu-north-1.pooler.supabase.com:5432/postgres?user=postgres.pqajbffnmeuulffagzoo&password=${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://aws-1-eu-north-1.pooler.supabase.com:5432/postgres
+    username: postgres.pqajbffnmeuulffagzoo
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 5
       minimum-idle: 1
       idle-timeout: 10000
       max-lifetime: 60000
+      connection-test-query: SELECT 1
 
   sql:
     init:
