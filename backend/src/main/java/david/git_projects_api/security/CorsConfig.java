@@ -18,7 +18,7 @@ public class CorsConfig {
         // Frontend origins
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:3000",
-                "https://git-projects-api-frontend-jwp1nehoh-david11267s-projects.vercel.app"
+                "https://git-projects-api-frontend.vercel.app"
         ));
 
         // HTTP methods allowed
