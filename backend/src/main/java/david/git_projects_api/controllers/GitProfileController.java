@@ -34,7 +34,7 @@ public class GitProfileController {
     @GetMapping("/key")
     public String key(@AuthenticationPrincipal Jwt jwt) {
         UserDto dto = UserDto.jwtToDto(jwt);
-        //User user = userService.getOrCreateUser(dto);
+        User user = userService.getOrCreateUser(dto);
         return "Hello " + jwt.getClaim("email");
     }
 
