@@ -26,6 +26,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // allow all OPTIONS preflight requests
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/projects").permitAll() // 👈 allow access without JWT
+
                         // secure everything else
                         .anyRequest().authenticated()
                 )

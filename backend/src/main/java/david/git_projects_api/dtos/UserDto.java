@@ -14,7 +14,6 @@ public record UserDto(String id, String profileImage,String username, String nam
         String name = jwt.getClaim("name");
         String surname = jwt.getClaim("surname");
         String email = jwt.getClaim("email");
-
         Instant experation = jwt.getClaim("exp");
         Instant issuedAt = jwt.getClaim("iat");
         return new UserDto(id,profileImage,username,name,surname,email,experation,issuedAt);

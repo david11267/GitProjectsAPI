@@ -5,6 +5,8 @@ import david.git_projects_api.dtos.UserDto;
 import david.git_projects_api.repositories.UserRepositorty;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public  class UserService {
     private final UserRepositorty userRepositorty;
@@ -20,5 +22,10 @@ public  class UserService {
             userRepositorty.save(user);
         }
         return user;
+    }
+
+    public boolean validateUserApiKey(String apiKey) {
+        UUID key = UUID.fromString(apiKey);
+        return userRepositorty.existsByApiKey(key);
     }
 }

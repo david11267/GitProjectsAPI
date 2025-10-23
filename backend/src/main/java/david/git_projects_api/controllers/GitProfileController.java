@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -20,8 +21,15 @@ public class GitProfileController {
     }
 
     @PostMapping("/projects")
-    public ResponseEntity<?> getProjects(@RequestBody ArrayList<String> repos) {
-        return ResponseEntity.ok().body(repos);
+    public ResponseEntity<?> getProjects(
+            @RequestBody ArrayList<String> repos,
+            @RequestHeader("apiKey") String apiKey) {
+        System.out.println("Received request from API key: " + apiKey);
+        System.out.println("Repos: " + repos);
+        if (userService.validateUserApiKey(apiKey)){
+            return ResponseEntity.ok().body(repos);
+        }
+        return ResponseEntity.badRequest().body("key is likley invalid");
     }
 
     /**
@@ -32,10 +40,10 @@ public class GitProfileController {
      * @return Api key and usageDetails
      */
     @GetMapping("/key")
-    public String key(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<UUID> key(@AuthenticationPrincipal Jwt jwt) {
         UserDto dto = UserDto.jwtToDto(jwt);
         User user = userService.getOrCreateUser(dto);
-        return "Hello " + jwt.getClaim("email");
+        return ResponseEntity.ok(user.getApiKey());
     }
 
     @GetMapping("/health")

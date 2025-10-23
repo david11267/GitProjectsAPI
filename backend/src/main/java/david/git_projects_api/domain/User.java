@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,6 +24,7 @@ public class User {
     private String username;
     private String email;
     private String profileImage;
+    private UUID apiKey;
     Instant experation;
     Instant issuedAt;
 
@@ -38,6 +40,9 @@ public class User {
         this.email = email;
         this.experation =experation;
         this.issuedAt = issuedAt;
+
+        //new api key on instantiation
+        this.apiKey = UUID.randomUUID();
     }
 
 
