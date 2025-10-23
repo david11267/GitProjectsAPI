@@ -1,4 +1,8 @@
+import { useUserApiKey } from "@/hooks/useUserApiKey";
 
 export default function ApiKey() {
-  return <div>Api key / add api key</div>;
+  const { status, data } = useUserApiKey();
+
+  if (!data) return <div>{status}</div>;
+  return <div>Api key: {data}</div>;
 }
