@@ -2,6 +2,7 @@ package david.git_projects_api.controllers;
 
 import david.git_projects_api.domain.User;
 import david.git_projects_api.dtos.UserDto;
+import david.git_projects_api.exceptions.InvalidApiKeyException;
 import david.git_projects_api.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,7 +30,7 @@ public class GitProfileController {
         if (userService.validateUserApiKey(apiKey)){
             return ResponseEntity.ok().body(repos);
         }
-        return ResponseEntity.badRequest().body("key is likley invalid");
+        throw new InvalidApiKeyException(apiKey);
     }
 
     /**
