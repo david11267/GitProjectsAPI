@@ -25,8 +25,6 @@ public class GitProfileController {
     public ResponseEntity<?> getProjects(
             @RequestBody ArrayList<String> repos,
             @RequestHeader("apiKey") String apiKey) {
-        System.out.println("Received request from API key: " + apiKey);
-        System.out.println("Repos: " + repos);
         if (userService.validateUserApiKey(apiKey)){
             return ResponseEntity.ok().body(repos);
         }
