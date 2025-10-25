@@ -24,6 +24,10 @@ public  class UserService {
         return user;
     }
 
+    public User getOrCreateUser(UUID apiKey){
+        return  userRepositorty.getUsersByApiKey(apiKey);
+    }
+
     public boolean validateUserApiKey(String apiKey) {
         UUID key = UUID.fromString(apiKey);
         return userRepositorty.existsByApiKey(key);

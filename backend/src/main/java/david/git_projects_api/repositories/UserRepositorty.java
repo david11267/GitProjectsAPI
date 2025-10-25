@@ -14,4 +14,6 @@ public interface UserRepositorty extends JpaRepository<User,String> {
     User getUsersById(String id);
 
     boolean existsByApiKey(UUID apiKey);
+
+    User getUsersByApiKey(UUID apiKey);
 }
