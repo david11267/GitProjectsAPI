@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import david.git_projects_api.dtos.ProjectsRequest;
+import david.git_projects_api.exceptions.GitHubRateLimitException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -46,10 +48,18 @@ public class GithubApiService {
                 .header("Accept", "application/vnd.github.v3+json")
                 .build();
         var metaResponse = client.send(metaRequest, HttpResponse.BodyHandlers.ofString());
+        if (metaResponse.statusCode() != 200) {
+            ObjectNode errorNode = mapper.createObjectNode();
+            errorNode.put("status",metaResponse.statusCode());
+            errorNode.put("message", "GitHub API error");
+            errorNode.put("body", metaResponse.body());
+            throw new GitHubRateLimitException(errorNode); // custom exception
+        }
+
         ObjectNode metaJson = (ObjectNode) mapper.readTree(metaResponse.body());
 
         // 2️⃣ Fetch all branches
-        String branchesUrl = metaJson.get("branches_url").asText().replace("{/branch}", "");
+        String branchesUrl = metaJson.get("branches_url").asText().replace("{/branch}", "/");
         var branchRequest = HttpRequest.newBuilder(URI.create(branchesUrl)).GET().build();
         var branchResponse = client.send(branchRequest, HttpResponse.BodyHandlers.ofString());
         JsonNode branchJson = mapper.readTree(branchResponse.body());
@@ -57,14 +67,13 @@ public class GithubApiService {
         // 3️⃣ Get last branch name
         String lastBranchName = branchJson.get(branchJson.size() - 1).get("name").asText();
 
-        // 4️⃣ Replace all {/sha} URLs in the metadata
-        for (String field : new String[]{"git_commits_url", "trees_url",
-                 "commits_url"}) {
-            if (metaJson.has(field)) {
-                String updatedUrl = metaJson.get(field).asText().replace("{/sha}", lastBranchName);
-                metaJson.put(field, updatedUrl);
+        // Replace all {/sha} URLs dynamically
+        metaJson.fieldNames().forEachRemaining(field -> {
+            String value = metaJson.get(field).asText();
+            if (value.contains("{/sha}")) {
+                metaJson.put(field, value.replace("{/sha}", "/"+lastBranchName));
             }
-        }
+        });
 
         return metaJson;
     }
@@ -74,7 +83,7 @@ public class GithubApiService {
         var mapper = new ObjectMapper();
 
         // List of fields we want to fetch
-        String[] preCheckedFields = {"git_commits_url", "trees_url", "commits_url"};
+        String[] preCheckedFields = {"html_url","description","git_commits_url", "trees_url", "commits_url","languages_url","homepage",""};
 
         // Build key -> URL map for the fields that exist
         Map<String, String> urls = Arrays.stream(preCheckedFields)

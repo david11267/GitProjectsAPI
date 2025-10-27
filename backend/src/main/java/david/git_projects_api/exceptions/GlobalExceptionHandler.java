@@ -1,5 +1,6 @@
 package david.git_projects_api.exceptions;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,6 +30,14 @@ public class GlobalExceptionHandler {
         error.put("status", HttpStatus.BAD_REQUEST.value());
         error.put("timestamp", LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+
+    @ExceptionHandler(GitHubRateLimitException.class)
+    public ResponseEntity<ObjectNode> handleGithubRateLimit(GitHubRateLimitException ex) {
+        ObjectNode errorBody = ex.getErrorBody();  // the GitHub JSON
+        return ResponseEntity.status(403)          // GitHub sends 403 for rate limit
+                .body(errorBody);
     }
 
 }
