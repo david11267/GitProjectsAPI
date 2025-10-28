@@ -1,5 +1,6 @@
 package david.git_projects_api.controllers;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import david.git_projects_api.domain.User;
 import david.git_projects_api.dtos.ProjectsRequest;
 import david.git_projects_api.dtos.UserDto;
@@ -33,9 +34,8 @@ public class GitProfileController {
         if (!userService.validateUserApiKey(apiKey)) throw new InvalidApiKeyException(apiKey);
 
         ProjectsRequest request = new ProjectsRequest(UUID.fromString(apiKey),repos);
-        projectsService.handleProjectsRequest(request);
-
-        return ResponseEntity.ok().body(repos);
+        ArrayList<ObjectNode> result =projectsService.handleProjectsRequest(request);
+        return ResponseEntity.ok().body(result);
 
     }
 

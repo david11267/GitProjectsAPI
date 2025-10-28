@@ -92,7 +92,6 @@ public class GithubApiService {
         return root;
     }
 
-
     private static JsonNode fetchJson(HttpClient client, ObjectMapper mapper, String url) {
         try {
             var request = HttpRequest.newBuilder(URI.create(url))

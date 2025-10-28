@@ -18,11 +18,12 @@ public class ProjectsService {
     }
 
 
-    public void handleProjectsRequest(ProjectsRequest request) throws IOException, InterruptedException {
+    public ArrayList<ObjectNode>  handleProjectsRequest(ProjectsRequest request) throws IOException, InterruptedException {
         System.out.println("Received request from API key: " + request.apiKey());
         System.out.println("Repos: " + request.repos());
         User user =userService.getOrCreateUser(request.apiKey());
         ArrayList<ObjectNode> result =  githubApiService.handleGithubFetches(request, user.getUsername());
+        return result;
     }
 }
 
