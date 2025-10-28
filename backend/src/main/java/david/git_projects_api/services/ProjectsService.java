@@ -1,5 +1,6 @@
 package david.git_projects_api.services;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import david.git_projects_api.domain.User;
 import david.git_projects_api.dtos.ProjectsRequest;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class ProjectsService {
         System.out.println("Received request from API key: " + request.apiKey());
         System.out.println("Repos: " + request.repos());
         User user =userService.getOrCreateUser(request.apiKey());
-        ArrayList<Map<String, JsonNode>> result=  githubApiService.handleGithubFetches(request, user.getUsername());
+        ArrayList<ObjectNode> result =  githubApiService.handleGithubFetches(request, user.getUsername());
     }
 }
 

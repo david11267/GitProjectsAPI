@@ -2,9 +2,9 @@ package david.git_projects_api.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import david.git_projects_api.dtos.ProjectsRequest;
-import david.git_projects_api.exceptions.GitHubRateLimitException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -13,21 +13,19 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class GithubApiService {
 
-    public ArrayList<Map<String, JsonNode>> handleGithubFetches(ProjectsRequest request, String githubUsername) throws IOException, InterruptedException {
-       ArrayList<Map<String,JsonNode>> fullDataList = new ArrayList<>();
+    private static final String githubToken = System.getenv("Github_Token");
+
+    public ArrayList<ObjectNode> handleGithubFetches(ProjectsRequest request, String githubUsername) throws IOException, InterruptedException {
+       ArrayList<ObjectNode> fullDataList = new ArrayList<>();
 
         for(String repoName:request.repos()){
         String repoUrl = buildGithubUrl(repoName, githubUsername);
-        JsonNode metaData =fetchMetaData(repoUrl);
-        Map<String, JsonNode> fullData = fullDataFetch(metaData);
+        String lastBranch =fetchLastBranch(repoUrl);
+        ObjectNode fullData =  extractRepoSummary(githubUsername,repoName,lastBranch);
         fullDataList.add(fullData);
        }
 
@@ -39,78 +37,72 @@ public class GithubApiService {
         return baseApiUrl + "/" + repoName;
     }
 
-    public static JsonNode fetchMetaData(String url) throws IOException, InterruptedException {
+    public static String fetchLastBranch(String url) throws IOException, InterruptedException {
         var client = HttpClient.newHttpClient();
         var mapper = new ObjectMapper();
 
-        // 1️⃣ Fetch repo metadata
-        var metaRequest = HttpRequest.newBuilder(URI.create(url))
-                .header("Accept", "application/vnd.github.v3+json")
-                .build();
-        var metaResponse = client.send(metaRequest, HttpResponse.BodyHandlers.ofString());
-        if (metaResponse.statusCode() != 200) {
-            ObjectNode errorNode = mapper.createObjectNode();
-            errorNode.put("status",metaResponse.statusCode());
-            errorNode.put("message", "GitHub API error");
-            errorNode.put("body", metaResponse.body());
-            throw new GitHubRateLimitException(errorNode); // custom exception
-        }
-
-        ObjectNode metaJson = (ObjectNode) mapper.readTree(metaResponse.body());
-
         // 2️⃣ Fetch all branches
-        String branchesUrl = metaJson.get("branches_url").asText().replace("{/branch}", "/");
-        var branchRequest = HttpRequest.newBuilder(URI.create(branchesUrl)).GET().build();
+        String branchesUrl = url + "/branches";
+        var branchRequest = HttpRequest.newBuilder(URI.create(branchesUrl)).GET()
+                .header("Authorization", "token " +githubToken).build();
         var branchResponse = client.send(branchRequest, HttpResponse.BodyHandlers.ofString());
         JsonNode branchJson = mapper.readTree(branchResponse.body());
 
-        // 3️⃣ Get last branch name
-        String lastBranchName = branchJson.get(branchJson.size() - 1).get("name").asText();
-
-        // Replace all {/sha} URLs dynamically
-        metaJson.fieldNames().forEachRemaining(field -> {
-            String value = metaJson.get(field).asText();
-            if (value.contains("{/sha}")) {
-                metaJson.put(field, value.replace("{/sha}", "/"+lastBranchName));
-            }
-        });
-
-        return metaJson;
+        return branchJson.get(branchJson.size() - 1)
+                .get("name")
+                .asText();
     }
 
-    public static Map<String, JsonNode> fullDataFetch(JsonNode metaData) {
+    public static ObjectNode extractRepoSummary(String owner, String repoName, String branch) {
         var client = HttpClient.newHttpClient();
         var mapper = new ObjectMapper();
+        var root = mapper.createObjectNode();
 
-        // List of fields we want to fetch
-        String[] preCheckedFields = {"html_url","description","git_commits_url", "trees_url", "commits_url","languages_url","homepage",""};
+        String base = "https://api.github.com/repos/" + owner + "/" + repoName;
 
-        // Build key -> URL map for the fields that exist
-        Map<String, String> urls = Arrays.stream(preCheckedFields)
-                .filter(metaData::has) // only include if present
-                .collect(Collectors.toMap(
-                        field -> field,
-                        field -> metaData.get(field).asText()
-                ));
+        // A: Basic repo info
+        JsonNode info = fetchJson(client, mapper, base);
+        root.put("repo", repoName);
+        root.put("description", info.path("description").asText(null));
 
-        // Fetch all URLs in parallel
-        return urls.entrySet().parallelStream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> fetchJson(client, mapper, entry.getValue())
-                ));
+        // B1: Languages
+        JsonNode languages = fetchJson(client, mapper, base + "/languages");
+        root.set("languages", languages);
+
+        // B2: Full file tree
+        JsonNode tree = fetchJson(client, mapper, base + "/git/trees/" + branch + "?recursive=1");
+        ArrayNode files = mapper.createArrayNode();
+        tree.path("tree").forEach(node -> {
+            if (node.has("path")) files.add(node.get("path").asText());
+        });
+        root.set("tree", files);
+
+        // Optional: README summary placeholder (we can add real summarization next)
+        JsonNode readme = fetchJson(client, mapper, base + "/readme");
+        if (readme.has("content")) {
+            String base64 = readme.get("content").asText();
+            base64 = base64.replaceAll("\\s+", "");
+            byte[] decodedBytes = java.util.Base64.getDecoder().decode(base64);
+            String readmeMd = new String(decodedBytes, java.nio.charset.StandardCharsets.UTF_8);
+            root.put("readme", readmeMd);
+        } else {
+            root.put("readme", "No README found");
+        }
+
+        return root;
     }
 
-    // Helper method to fetch a single URL and return JsonNode
+
     private static JsonNode fetchJson(HttpClient client, ObjectMapper mapper, String url) {
         try {
             var request = HttpRequest.newBuilder(URI.create(url))
                     .header("Accept", "application/vnd.github.v3+json")
+                    .header("Authorization", "token " +githubToken)
                     .build();
             var response = client.send(request, HttpResponse.BodyHandlers.ofString());
             return mapper.readTree(response.body());
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException("Failed to fetch URL: " + url, e);
+        } catch (Exception e) {
+            return mapper.createObjectNode().put("error", "Failed to fetch: " + url);
         }
     }
 
