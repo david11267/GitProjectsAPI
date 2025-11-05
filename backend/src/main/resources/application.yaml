@@ -3,7 +3,8 @@ server:
 spring:
   application:
     name: git_projects_api
-
+  profiles:
+    active: prod   #dev, prod
   jpa:
     defer-datasource-initialization: true
     hibernate:
