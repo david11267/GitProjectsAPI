@@ -41,7 +41,7 @@ public class GitProfileController {
 
     /**
      * Checks if the user is registered in db.
-     * If not registers user and creates an api key.
+     * If not, registers the user and creates an api key.
      *
      * @param jwt the JWT of the authenticated user
      * @return Api key and usageDetails
