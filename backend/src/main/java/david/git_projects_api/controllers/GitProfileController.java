@@ -3,6 +3,7 @@ package david.git_projects_api.controllers;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import david.git_projects_api.domain.User;
 import david.git_projects_api.dtos.ProjectsRequest;
+import david.git_projects_api.dtos.RepoAnalysisDto;
 import david.git_projects_api.dtos.UserDto;
 import david.git_projects_api.exceptions.InvalidApiKeyException;
 import david.git_projects_api.services.ProjectsService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -34,7 +36,7 @@ public class GitProfileController {
         if (!userService.validateUserApiKey(apiKey)) throw new InvalidApiKeyException(apiKey);
 
         ProjectsRequest request = new ProjectsRequest(UUID.fromString(apiKey),repos);
-        ArrayList<ObjectNode> result =projectsService.handleProjectsRequest(request);
+        List<RepoAnalysisDto> result =projectsService.handleProjectsRequest(request);
         return ResponseEntity.ok().body(result);
 
     }

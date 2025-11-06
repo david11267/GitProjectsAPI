@@ -1,13 +1,12 @@
 package david.git_projects_api.services;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.genai.types.GenerateContentResponse;
 import david.git_projects_api.domain.User;
 import david.git_projects_api.dtos.ProjectsRequest;
+import david.git_projects_api.dtos.RepoAnalysisDto;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class ProjectsService {
@@ -21,14 +20,15 @@ public class ProjectsService {
     }
 
 
-    public ArrayList<ObjectNode>  handleProjectsRequest(ProjectsRequest request) throws IOException, InterruptedException {
+    public List<RepoAnalysisDto> handleProjectsRequest(ProjectsRequest request) throws IOException, InterruptedException {
         System.out.println("Received request from API key: " + request.apiKey());
         System.out.println("Repos: " + request.repos());
         User user =userService.getOrCreateUser(request.apiKey());
+
         ArrayList<ObjectNode> rawJson =  githubApiService.handleGithubFetches(request, user.getUsername());
-        GenerateContentResponse aiPolishedJson =  geminiAiService.generateContent(rawJson);
-        String aiAnswer = aiPolishedJson.text();
-        return rawJson;
+
+        List<RepoAnalysisDto> repoAnalysisDtoList =  geminiAiService.generateContent(rawJson);
+        return repoAnalysisDtoList;
     }
 }
 
