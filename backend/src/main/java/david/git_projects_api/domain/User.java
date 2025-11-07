@@ -1,5 +1,4 @@
 package david.git_projects_api.domain;
-import david.git_projects_api.domain.enums.ApiKey;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

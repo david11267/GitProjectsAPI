@@ -1,6 +1,5 @@
-package david.git_projects_api.domain.enums;
+package david.git_projects_api.domain;
 
-import david.git_projects_api.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +15,7 @@ public class ApiKey {
     @Id
     private UUID id;
     private UUID key;
+    private int quota; //remaining api cals
     private Instant issuedAt;
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -25,5 +25,6 @@ public class ApiKey {
         this.id = UUID.randomUUID();
         this.issuedAt = Instant.now();
         this.key = UUID.randomUUID();
+        this.quota = 10;
     }
 }
