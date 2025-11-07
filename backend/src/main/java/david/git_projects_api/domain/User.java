@@ -1,15 +1,12 @@
 package david.git_projects_api.domain;
+import david.git_projects_api.domain.enums.ApiKey;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+
 
 @Getter
 @Setter
@@ -24,27 +21,20 @@ public class User {
     private String username;
     private String email;
     private String profileImage;
-    private UUID apiKey;
-    Instant experation;
-    Instant issuedAt;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private ApiKey apikey;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Project> projects;
 
-    public User(String id, String profileImage, String username, String name, String surname, String email, Instant experation, Instant issuedAt) {
+    public User(String id, String profileImage, String username, String name, String surname, String email) {
         this.id = id;
         this.profileImage = profileImage;
         this.username = username;
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.experation =experation;
-        this.issuedAt = issuedAt;
-
-        //new api key on instantiation
-        this.apiKey = UUID.randomUUID();
+        this.apikey= new ApiKey();
+        this.apikey.setUser(this);
     }
-
-
-
 }

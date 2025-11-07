@@ -52,7 +52,7 @@ public class GitProfileController {
     public ResponseEntity<UUID> key(@AuthenticationPrincipal Jwt jwt) {
         UserDto dto = UserDto.jwtToDto(jwt);
         User user = userService.getOrCreateUser(dto);
-        return ResponseEntity.ok(user.getApiKey());
+        return ResponseEntity.ok(user.getApikey().getKey());
     }
 
     @GetMapping("/health")

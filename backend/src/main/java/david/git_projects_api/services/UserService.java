@@ -16,7 +16,7 @@ public  class UserService {
     }
 
     public User getOrCreateUser(UserDto userDto){
-        User user= userRepositorty.getUsersById(userDto.id());
+        User user= userRepositorty.getUserById(userDto.id());
         if (user == null){
             user = userDto.toUser();
             userRepositorty.save(user);
@@ -25,11 +25,11 @@ public  class UserService {
     }
 
     public User getOrCreateUser(UUID apiKey){
-        return  userRepositorty.getUsersByApiKey(apiKey);
+        return  userRepositorty.getUsersByApikey_Key(apiKey);
     }
 
     public boolean validateUserApiKey(String apiKey) {
         UUID key = UUID.fromString(apiKey);
-        return userRepositorty.existsByApiKey(key);
+        return userRepositorty.existsByApikey_Key(key);
     }
 }
