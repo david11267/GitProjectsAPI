@@ -1,6 +1,7 @@
 package david.git_projects_api.controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import david.git_projects_api.domain.ApiKey;
 import david.git_projects_api.domain.User;
 import david.git_projects_api.dtos.ProjectsRequest;
 import david.git_projects_api.dtos.RepoAnalysisDto;
@@ -49,10 +50,11 @@ public class GitProfileController {
      * @return Api key and usageDetails
      */
     @GetMapping("/key")
-    public ResponseEntity<UUID> key(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<ApiKey> key(@AuthenticationPrincipal Jwt jwt) {
         UserDto dto = UserDto.jwtToDto(jwt);
         User user = userService.getOrCreateUser(dto);
-        return ResponseEntity.ok(user.getApikey().getKey());
+        ApiKey apiKey=user.getApikey();
+        return ResponseEntity.ok(apiKey);
     }
 
     @GetMapping("/health")
