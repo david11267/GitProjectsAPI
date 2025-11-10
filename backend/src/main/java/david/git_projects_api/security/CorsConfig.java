@@ -16,13 +16,18 @@ public class CorsConfig {
     @Value("${spring.profiles.active}")
     private String activeProfile;
 
+    @Value("${FrontendUrl}")
+    private String frontendUrl;
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource(Environment environment) {
+        System.out.println("FrontendUrl: "+frontendUrl);
+
         CorsConfiguration config = new CorsConfiguration();
         // DO NOT use "*" if you will allow credentials. Use exact origin(s).
         // Always allow production frontend
         config.setAllowedOrigins(Arrays.asList(
-                "https://git-projects-api.vercel.app"
+                frontendUrl
         ));
 
         // Only add localhost origins in dev mode
