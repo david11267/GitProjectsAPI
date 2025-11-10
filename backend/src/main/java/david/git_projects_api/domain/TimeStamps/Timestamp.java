@@ -1,0 +1,25 @@
+package david.git_projects_api.domain.TimeStamps;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.Instant;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@MappedSuperclass
+public abstract class Timestamp {
+    @Id
+    @GeneratedValue
+    private Long id;
+    protected String action;
+    protected Instant timestamp;
+
+    public Timestamp(String action, Instant timestamp) {
+        this.action = action;
+        this.timestamp = timestamp;
+    }
+}
