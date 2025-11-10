@@ -4,11 +4,11 @@ spring:
   application:
     name: git_projects_api
   profiles:
-    active: dev   #dev, prod
+    active: ${ACTIVE_PROFILE}   #dev, prod
   jpa:
     defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         type:
