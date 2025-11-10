@@ -3,12 +3,15 @@
 	import Container from '../components/Container.svelte';
 	import type { ApiKey } from '../types/AllTypes';
 	const ctx = useClerkContext();
+	let showSaveButton = false;
 
 	let apiKey: ApiKey = $state({
 		id: '',
 		key: '',
 		quota: 0,
 		issuedAt: '',
+		timestamps: [],
+		enableAi: true,
 		user: undefined
 	});
 	const fetchDataFromExternalResource = async (token: string) => {
@@ -26,7 +29,6 @@
 		const run = async () => {
 			const token = await ctx.session?.getToken();
 			if (!token) return;
-
 			apiKey = (await fetchDataFromExternalResource(token)) as ApiKey;
 		};
 
@@ -47,7 +49,27 @@
 		<Container>
 			<p>Remaining api calls {apiKey.quota}</p>
 		</Container>
-		<Container class="col-span-2">Api key usage timeline graph</Container>
-		<Container class="col-span-2">Api key options</Container>
+		<Container class="col-span-2 row-span-2"
+			><p>Api key usage timeline graph</p>
+			<ul>
+				{#each apiKey.timestamps as { action, timestamp }}
+					<li>{action} : {timestamp}</li>
+				{/each}
+			</ul></Container
+		>
+		<Container class="col-span-2"
+			><p>Api key options</p>
+			<div class="flex space-x-4">
+				<div>
+					<label class="cursor-pointer" for="enableAi">EnableAi:</label>
+					<input
+						class="cursor-pointer"
+						id="enableAi"
+						bind:checked={apiKey.enableAi}
+						type="checkbox"
+					/>
+				</div>
+			</div>
+		</Container>
 	{/if}
 </div>

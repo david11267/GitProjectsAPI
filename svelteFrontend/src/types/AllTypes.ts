@@ -4,6 +4,8 @@ export type ApiKey = {
 	quota: number; // int → number
 	issuedAt: string; // Instant → ISO timestamp string
 	user?: User; // Optional because you might not always include it in responses
+	timestamps: Array<Timestamp>;
+	enableAi: boolean;
 };
 
 type User = {
@@ -13,4 +15,10 @@ type User = {
 	username: string;
 	email: string;
 	profileImage?: string;
+};
+
+type Timestamp = {
+	id: number;
+	action: string;
+	timestamp: string; // ISO string
 };
