@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -16,12 +17,12 @@ public class CorsConfig {
     private String activeProfile;
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource(Environment environment) {
         CorsConfiguration config = new CorsConfiguration();
         // DO NOT use "*" if you will allow credentials. Use exact origin(s).
         // Always allow production frontend
         config.setAllowedOrigins(Arrays.asList(
-                "https://git-projects-api-frontend.vercel.app"
+                environment.getProperty("FrontendUrl")
         ));
 
         // Only add localhost origins in dev mode
