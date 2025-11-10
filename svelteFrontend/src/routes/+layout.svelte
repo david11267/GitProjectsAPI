@@ -13,9 +13,7 @@
 </svelte:head>
 
 <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
-
-<div class="bg-gray-900 min-h-screen w-full flex items-center justify-center">
-
+	<div class="flex min-h-screen w-full items-center justify-center bg-gray-900">
 		<SignedOut>
 			<SignInButton />
 		</SignedOut>
@@ -25,6 +23,5 @@
 				{@render children()}
 			</div>
 		</SignedIn>
-</div>
+	</div>
 </ClerkProvider>
-
