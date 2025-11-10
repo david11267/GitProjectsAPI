@@ -26,6 +26,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Project> projects;
 
+
     public User(String id, String profileImage, String username, String name, String surname, String email) {
         this.id = id;
         this.profileImage = profileImage;

@@ -1,12 +1,11 @@
 package david.git_projects_api.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import david.git_projects_api.domain.TimeStamps.ApiTimestamp;
-import david.git_projects_api.domain.TimeStamps.Timestamp;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.Instant;
 import java.util.*;
 
@@ -28,14 +27,17 @@ public class ApiKey {
     @OneToMany(mappedBy = "apiKey", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApiTimestamp> timestamps = new ArrayList<>();
 
-    //Api key options
-    boolean enableAi;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "api_key_settings_id")
+    @JsonManagedReference
+    private ApiKeySettings settings;
 
     public ApiKey() {
         this.id = UUID.randomUUID();
         this.key = UUID.randomUUID();
         this.quota = 10;
-        this.enableAi = true;
+        this.settings = new ApiKeySettings();
+        this.settings.setApiKey(this);
         this.timestamps.add(new ApiTimestamp("Initialized api key",Instant.now(), this));
     }
 }
