@@ -12,7 +12,6 @@ export const load: LayoutServerLoad = async ({ locals, fetch }) => {
 	const token = await getToken();
 	const baseUrl = import.meta.env.VITE_API_BASE_URL;
 	let apiKey = null;
-
 	try {
 		const res = await fetch(`${baseUrl}/api/key`, {
 			headers: { Authorization: `Bearer ${token}` }
@@ -22,6 +21,7 @@ export const load: LayoutServerLoad = async ({ locals, fetch }) => {
 			console.error('Backend error:', res.status, res.statusText);
 		} else {
 			apiKey = await res.json();
+			console.log(apiKey);
 		}
 	} catch (err) {
 		// Network-level error: backend offline, wrong host, etc.
