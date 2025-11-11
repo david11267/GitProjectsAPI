@@ -1,8 +1,12 @@
 package david.git_projects_api.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import com.google.genai.Client;
 import com.google.genai.types.GenerateContentResponse;
 import david.git_projects_api.dtos.RepoAnalysisDto;
@@ -16,8 +20,10 @@ public class GeminiAiService {
 
     private final Client client;
     private final ObjectMapper objectMapper;
+    JsonSchemaGenerator schemaGenerator;
 
-    public GeminiAiService() {
+
+    public GeminiAiService() throws JsonProcessingException {
         String apiKey = System.getenv("GOOGLE_API_KEY");
         if (apiKey == null || apiKey.trim().isEmpty()) {
             throw new IllegalStateException(
@@ -27,6 +33,10 @@ public class GeminiAiService {
 
         this.client = new Client(); // Assumes Client reads GOOGLE_API_KEY automatically
         this.objectMapper = new ObjectMapper();
+        schemaGenerator = new JsonSchemaGenerator(objectMapper);
+        JsonSchema jsonSchema = schemaGenerator.generateSchema(RepoAnalysisDto.class);
+        String prettySchema =  objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema);
+
         System.out.println("🔑 Google Gemini client initialized successfully");
     }
 
