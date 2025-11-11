@@ -27,17 +27,13 @@ public class ApiKey {
     @OneToMany(mappedBy = "apiKey", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApiTimestamp> timestamps = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "api_key_settings_id")
-    @JsonManagedReference
-    private ApiKeySettings settings;
+    private boolean enableAi;
 
     public ApiKey() {
         this.id = UUID.randomUUID();
         this.key = UUID.randomUUID();
         this.quota = 10;
-        this.settings = new ApiKeySettings();
-        this.settings.setApiKey(this);
+        this.enableAi = true;
         this.timestamps.add(new ApiTimestamp("Initialized api key",Instant.now(), this));
     }
 }

@@ -29,6 +29,7 @@ public  class UserService {
     }
 
     public boolean validateUserApiKey(String apiKey) {
+
         UUID key = UUID.fromString(apiKey);
         return userRepositorty.existsByApikey_Key(key);
     }
