@@ -24,9 +24,7 @@ public class ProjectsService {
         System.out.println("Received request from API key: " + request.apiKey());
         System.out.println("Repos: " + request.repos());
         User user =userService.getOrCreateUser(request.apiKey());
-
         ArrayList<ObjectNode> rawJson =  githubApiService.handleGithubFetches(request, user.getUsername());
-
         List<RepoAnalysisDto> repoAnalysisDtoList =  geminiAiService.generateContent(rawJson);
         return repoAnalysisDtoList;
     }

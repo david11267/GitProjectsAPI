@@ -21,6 +21,7 @@ public class GeminiAiService {
     private final Client client;
     private final ObjectMapper objectMapper;
     JsonSchemaGenerator schemaGenerator;
+    String prettySchema;
 
 
     public GeminiAiService() throws JsonProcessingException {
@@ -33,9 +34,9 @@ public class GeminiAiService {
 
         this.client = new Client(); // Assumes Client reads GOOGLE_API_KEY automatically
         this.objectMapper = new ObjectMapper();
-        schemaGenerator = new JsonSchemaGenerator(objectMapper);
+        this.schemaGenerator = new JsonSchemaGenerator(objectMapper);
         JsonSchema jsonSchema = schemaGenerator.generateSchema(RepoAnalysisDto.class);
-        String prettySchema =  objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema);
+        this.prettySchema =  objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema);
 
         System.out.println("🔑 Google Gemini client initialized successfully");
     }
