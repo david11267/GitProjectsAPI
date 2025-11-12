@@ -45,58 +45,65 @@ public class GeminiAiService {
             String repoDataJson = objectMapper.writeValueAsString(rawJson);
 
             String schema = """
-                    {
-                      "repoSummaryDtoCollections": [
-                        {
-                          "name": "string",
-                          "description": "string",
-                          "languages": ["string"],
-                          "frameworks": ["string"],
-                          "tools": ["string"],
-                          "architecture": "string",
-                          "deployment": "string"
-                        }
-                      ]
-                    }
-                    """;
+{
+  "repoSummaryDtoCollections": [
+    {
+      "name": "string",
+      "description": "string",
+      "languages": ["string"],
+      "frameworks": ["string"],
+      "tools": ["string"],
+      "architecture": "string",
+      "deployment": "string"
+    }
+  ]
+}
+""";
 
             String instructionPrompt = """
-            You are an expert software repository analysis model.
-            
-            Input:
-            A JSON object describing a GitHub repository with keys like "repo", "description", "languages", "tree", and "readme".
-            
-            Task:
-            Infer and summarize the repository’s technologies, frameworks, architecture, build tools, dependencies, and integrations. 
-            Use folder names, file names, and extensions to detect frameworks and tools.
-            
-            Output:
-            Return a single valid JSON object strictly matching this schema:
-            %s
-            
-            Rules:
-            - Respond only with the JSON object. 
-            - No prose, no markdown, no code fences.
-            - Do not explain reasoning or include extra fields.
-            - Ensure JSON validity and consistent property naming.
-            
-            Repository data:
-            %s
-            """.formatted(schema,repoDataJson);
+You are an expert software repository analysis model.
+
+Input:
+A JSON array describing one or more GitHub repositories. Each repository contains keys like "repo", "description", "languages", "tree", and "readme".
+
+Task:
+Infer and summarize each repository’s technologies, frameworks, architecture, build tools, dependencies, and integrations. Use folder names, file names, and extensions to detect frameworks and tools.
+
+Output:
+Return a single JSON object with the key "repoSummaryDtoCollections". The value should be an array of objects strictly matching this schema:
+%s
+
+Rules:
+- Respond ONLY with a valid JSON object starting with { and ending with }.
+- Do NOT wrap the output in [], triple quotes, or any extra quotes.
+- Do NOT use backticks (`) or other non-JSON symbols.
+- No prose, no markdown, no code fences.
+- Do not explain reasoning or include extra fields.
+- Ensure JSON validity and consistent property naming.
+
+Repository data:
+%s
+""".formatted(schema, repoDataJson);
+
 
             // Call Gemini with both the prompt and the repo data
             GenerateContentResponse response = client.models
                     .generateContent("gemini-2.5-flash", instructionPrompt,null);
-            String parsedJson = response.text();
+
+            String parsedJson = response.text()
+                    .trim()
+                    .replaceAll("^```json|^```|```$", "")
+                    .replaceAll("^[`]+|[`]+$", "")
+                    .trim();
 
             RepoSummaryDtoCollection dtoList = objectMapper.readValue(
-                    response.text(), RepoSummaryDtoCollection.class
+                    parsedJson, RepoSummaryDtoCollection.class
             );
 
             return dtoList;
 
         } catch (Exception e) {
-            throw new ApiException("Gemini error: "+e.getMessage(), HttpStatus.BAD_REQUEST);
+            throw new ApiException("Gemini error: "+e.getMessage(), HttpStatus.OK);
         }
     }
 }
