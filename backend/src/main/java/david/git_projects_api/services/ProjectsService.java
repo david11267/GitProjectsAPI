@@ -2,11 +2,10 @@ package david.git_projects_api.services;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import david.git_projects_api.domain.User;
 import david.git_projects_api.dtos.ProjectsRequest;
-import david.git_projects_api.dtos.RepoAnalysisDto;
+import david.git_projects_api.dtos.RepoSummaryDtoCollection;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ProjectsService {
@@ -20,12 +19,12 @@ public class ProjectsService {
     }
 
 
-    public List<RepoAnalysisDto> handleProjectsRequest(ProjectsRequest request) throws IOException, InterruptedException {
+    public RepoSummaryDtoCollection handleProjectsRequest(ProjectsRequest request) throws IOException, InterruptedException {
         System.out.println("Received request from API key: " + request.apiKey());
         System.out.println("Repos: " + request.repos());
         User user =userService.getOrCreateUser(request.apiKey());
         ArrayList<ObjectNode> rawJson =  githubApiService.handleGithubFetches(request, user.getUsername());
-        List<RepoAnalysisDto> repoAnalysisDtoList =  geminiAiService.generateContent(rawJson);
+        RepoSummaryDtoCollection repoAnalysisDtoList =  geminiAiService.generateContent(rawJson);
         return repoAnalysisDtoList;
     }
 }

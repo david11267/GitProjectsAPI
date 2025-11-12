@@ -1,10 +1,9 @@
 package david.git_projects_api.controllers;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import david.git_projects_api.domain.ApiKey;
 import david.git_projects_api.domain.User;
 import david.git_projects_api.dtos.ProjectsRequest;
-import david.git_projects_api.dtos.RepoAnalysisDto;
+import david.git_projects_api.dtos.RepoSummaryDtoCollection;
 import david.git_projects_api.dtos.UserDto;
 import david.git_projects_api.exceptions.InvalidApiKeyException;
 import david.git_projects_api.services.ProjectsService;
@@ -37,7 +36,7 @@ public class GitProfileController {
         if (!userService.validateUserApiKey(apiKey)) throw new InvalidApiKeyException(apiKey);
 
         ProjectsRequest request = new ProjectsRequest(UUID.fromString(apiKey),repos);
-        List<RepoAnalysisDto> result =projectsService.handleProjectsRequest(request);
+        RepoSummaryDtoCollection result =projectsService.handleProjectsRequest(request);
         return ResponseEntity.ok().body(result);
 
     }

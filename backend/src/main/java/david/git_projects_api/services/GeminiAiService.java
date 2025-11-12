@@ -1,27 +1,26 @@
 package david.git_projects_api.services;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import com.google.genai.Client;
 import com.google.genai.types.GenerateContentResponse;
-import david.git_projects_api.dtos.RepoAnalysisDto;
+import david.git_projects_api.dtos.RepoSummaryDtoCollection;
+import david.git_projects_api.exceptions.ApiException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class GeminiAiService {
 
     private final Client client;
     private final ObjectMapper objectMapper;
-    JsonSchemaGenerator schemaGenerator;
-    String prettySchema;
-
 
     public GeminiAiService() throws JsonProcessingException {
         String apiKey = System.getenv("GOOGLE_API_KEY");
@@ -33,50 +32,71 @@ public class GeminiAiService {
 
         this.client = new Client(); // Assumes Client reads GOOGLE_API_KEY automatically
         this.objectMapper = new ObjectMapper();
-        this.schemaGenerator = new JsonSchemaGenerator(objectMapper);
-        JsonSchema jsonSchema = schemaGenerator.generateSchema(RepoAnalysisDto.class);
-        this.prettySchema =  objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema);
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
 
         System.out.println("🔑 Google Gemini client initialized successfully");
     }
 
-    public List<RepoAnalysisDto> generateContent(ArrayList<ObjectNode> rawJson) {
+    public RepoSummaryDtoCollection generateContent(ArrayList<ObjectNode> rawJson) {
         try {
             // Convert list of ObjectNodes into a JSON array string
             String repoDataJson = objectMapper.writeValueAsString(rawJson);
 
-            // Define the instruction prompt
+            String schema = """
+                    {
+                      "repoSummaryDtoCollections": [
+                        {
+                          "name": "string",
+                          "description": "string",
+                          "languages": ["string"],
+                          "frameworks": ["string"],
+                          "tools": ["string"],
+                          "architecture": "string",
+                          "deployment": "string"
+                        }
+                      ]
+                    }
+                    """;
+
             String instructionPrompt = """
-You are a software analysis system.
-Given a JSON object representing a GitHub repository (with properties such as "repo", "description", "languages", "tree", and "readme"), analyze it and produce a structured JSON response describing the repository’s technologies, frameworks, architecture, tools, integrations, and development setup.
-Infer frameworks and tools based on folder names, file names, and extensions.
-Follow this exact output format and return only valid JSON:
-{
-  "repository": {"name": "string", "description": "string", "overview": "string"},
-  "languages": [{"name": "string", "bytes": number, "role": "string"}],
-  "frameworks": {"backend": ["string"], "frontend": ["string"], "testing": ["string"], "build": ["string"]},
-  "tools_and_integrations": [{"name": "string", "category": "api | auth | deployment | ai | devops | config | other", "description": "string"}],
-  "architecture": {"type": "monorepo | single-service | microservices | unknown", "modules": [{"name": "string", "role": "backend | frontend | shared | infra", "key_paths": ["string"]}], "design_patterns": ["string"]},
-  "external_services": [{"name": "string", "purpose": "string"}],
-  "build_and_deployment": {"build_tools": ["string"], "containerization": ["string"], "ci_cd": ["string"]},
-  "developer_experience": {"code_organization": "string", "maintainability": "string", "missing_files": ["string"]}
-}
-Only return the JSON object. Do not add explanations or markdown formatting. When des
-""";
+            You are an expert software repository analysis model.
+            
+            Input:
+            A JSON object describing a GitHub repository with keys like "repo", "description", "languages", "tree", and "readme".
+            
+            Task:
+            Infer and summarize the repository’s technologies, frameworks, architecture, build tools, dependencies, and integrations. 
+            Use folder names, file names, and extensions to detect frameworks and tools.
+            
+            Output:
+            Return a single valid JSON object strictly matching this schema:
+            %s
+            
+            Rules:
+            - Respond only with the JSON object. 
+            - No prose, no markdown, no code fences.
+            - Do not explain reasoning or include extra fields.
+            - Ensure JSON validity and consistent property naming.
+            
+            Repository data:
+            %s
+            """.formatted(schema,repoDataJson);
 
             // Call Gemini with both the prompt and the repo data
             GenerateContentResponse response = client.models
-                    .generateContent("gemini-2.5-flash", instructionPrompt +"Multiple repo Data: "+ repoDataJson,null);
+                    .generateContent("gemini-2.5-flash", instructionPrompt,null);
+            String parsedJson = response.text();
 
-            // ✅ Parse into a list of RepoAnalysisDto
-            List<RepoAnalysisDto> dtoList = objectMapper.readValue(
-                    response.text(),
-                    new TypeReference<List<RepoAnalysisDto>>() {}
+            RepoSummaryDtoCollection dtoList = objectMapper.readValue(
+                    response.text(), RepoSummaryDtoCollection.class
             );
+
             return dtoList;
 
         } catch (Exception e) {
-            throw new RuntimeException("Error generating Gemini content", e);
+            throw new ApiException("Gemini error: "+e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }
