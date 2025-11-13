@@ -18,8 +18,8 @@ public abstract class Timestamp {
     protected String action;
     protected Instant timestamp;
 
-    public Timestamp(String action, Instant timestamp) {
-        this.action = action;
-        this.timestamp = timestamp;
+    public Timestamp(String timestampText) {
+        this.action = timestampText;
+        this.timestamp = Instant.now() ;
     }
 }

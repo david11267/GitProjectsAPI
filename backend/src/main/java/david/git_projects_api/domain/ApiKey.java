@@ -34,6 +34,6 @@ public class ApiKey {
         this.key = UUID.randomUUID();
         this.quota = 10;
         this.enableAi = true;
-        this.timestamps.add(new ApiTimestamp("Initialized api key",Instant.now(), this));
+        this.timestamps.add(new ApiTimestamp("Initialized api key",this));
     }
 }

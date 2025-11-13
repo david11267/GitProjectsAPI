@@ -1,5 +1,6 @@
 package david.git_projects_api.services;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import david.git_projects_api.domain.TimeStamps.ApiTimestamp;
 import david.git_projects_api.domain.User;
 import david.git_projects_api.dtos.ProjectsRequest;
 import david.git_projects_api.dtos.RepoSummaryDtoCollection;
@@ -12,18 +13,23 @@ public class ProjectsService {
     private final GithubApiService githubApiService;
     private  final UserService userService;
     private final GeminiAiService geminiAiService;
-    public ProjectsService(UserService userService,GithubApiService githubApiService, GeminiAiService geminiAiService) {
+    private final TimestampService timestampService;
+
+    public ProjectsService(UserService userService,GithubApiService githubApiService, GeminiAiService geminiAiService, TimestampService timestampService) {
         this.userService = userService;
         this.githubApiService= githubApiService;
         this.geminiAiService = geminiAiService;
+        this.timestampService= timestampService;
     }
-
 
     public RepoSummaryDtoCollection handleProjectsRequest(ProjectsRequest request) throws IOException, InterruptedException {
         System.out.println("Received request from API key: " + request.apiKey());
         System.out.println("Repos: " + request.repos());
         User user =userService.getOrCreateUser(request.apiKey());
+
+        TimestampService.createTimestamp(new ApiTimestamp("Grabbing github data",user.getApikey()));
         ArrayList<ObjectNode> rawJson =  githubApiService.handleGithubFetches(request, user.getUsername());
+        TimestampService.createTimestamp(new ApiTimestamp("Filling the data blanks with gemini",user.getApikey()));
         RepoSummaryDtoCollection repoAnalysisDtoList =  geminiAiService.generateContent(rawJson);
         return repoAnalysisDtoList;
     }
