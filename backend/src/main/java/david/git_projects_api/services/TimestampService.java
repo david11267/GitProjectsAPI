@@ -17,7 +17,7 @@ public  class TimestampService {
         this.apiKeyRepository = apiKeyRepository;
     }
 
-    public static void createTimestamp(Timestamp timestamp) {
+    public  void createTimestamp(Timestamp timestamp) {
         switch (timestamp) {
             case ApiTimestamp apiTs -> handleApiTimestamp(apiTs);
             default -> throw new IllegalArgumentException(
@@ -28,10 +28,9 @@ public  class TimestampService {
 
     }
 
-    private static void handleApiTimestamp(ApiTimestamp apiTs) {
+    private void handleApiTimestamp(ApiTimestamp apiTs) {
         ApiKey apiKey = apiTs.getApiKey();
-        List<ApiTimestamp> timestampList = apiKey.getTimestamps();
-        timestampList.add(apiTs);
-        this.apiKeyRepository.
+        apiKey.getTimestamps().add(apiTs);
+        this.apiKeyRepository.save(apiKey);
     }
 }

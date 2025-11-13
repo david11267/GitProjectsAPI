@@ -1,5 +1,6 @@
 package david.git_projects_api.domain.TimeStamps;
 
+import david.git_projects_api.repositories.ApiKeyRepository;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

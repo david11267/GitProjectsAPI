@@ -25,12 +25,12 @@ public class ProjectsService {
     public RepoSummaryDtoCollection handleProjectsRequest(ProjectsRequest request) throws IOException, InterruptedException {
         System.out.println("Received request from API key: " + request.apiKey());
         System.out.println("Repos: " + request.repos());
-        User user =userService.getOrCreateUser(request.apiKey());
 
-        TimestampService.createTimestamp(new ApiTimestamp("Grabbing github data",user.getApikey()));
+        User user =userService.getOrCreateUser(request.apiKey());
         ArrayList<ObjectNode> rawJson =  githubApiService.handleGithubFetches(request, user.getUsername());
-        TimestampService.createTimestamp(new ApiTimestamp("Filling the data blanks with gemini",user.getApikey()));
+
         RepoSummaryDtoCollection repoAnalysisDtoList =  geminiAiService.generateContent(rawJson);
+        timestampService.createTimestamp(new ApiTimestamp("API handled projects request",user.getApikey()));
         return repoAnalysisDtoList;
     }
 }
