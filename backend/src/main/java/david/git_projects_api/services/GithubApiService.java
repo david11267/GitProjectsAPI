@@ -62,7 +62,8 @@ public class GithubApiService {
         var root = mapper.createObjectNode();
 
         String base = "https://api.github.com/repos/" + owner + "/" + repoName;
-
+//repo url
+        JsonNode repoUrl = root.put("repoUrl",base);
         // A: Basic repo info
         JsonNode info = fetchJson(client, mapper, base);
         root.put("repo", repoName);
@@ -79,6 +80,9 @@ public class GithubApiService {
             if (node.has("path")) files.add(node.get("path").asText());
         });
         root.set("tree", files);
+
+
+
 
         // Optional: README summary placeholder (we can add real summarization next)
         JsonNode readme = fetchJson(client, mapper, base + "/readme");

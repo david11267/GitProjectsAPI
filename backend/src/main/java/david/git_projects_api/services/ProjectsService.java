@@ -25,12 +25,24 @@ public class ProjectsService {
     }
 
     public RepoSummaryDtoCollection handleProjectsRequest(ProjectsRequest request) throws IOException, InterruptedException {
-        System.out.println("Received request from API key: " + request.apiKey().getKey());
-        System.out.println("Repos: " + request.repos());
-        ArrayList<ObjectNode> rawJson =  githubApiService.handleGithubFetches(request);
-        RepoSummaryDtoCollection repoAnalysisDtoList =  geminiAiService.generateContent(rawJson);
+        System.out.printf("""
+                Received request from API key: %s
+                Repos: %s
+                """, request.apiKey().getKey(),request.repos());
+        ArrayList<ObjectNode> githubJson =  githubApiService.handleGithubFetches(request);
+        RepoSummaryDtoCollection manuallyFilledCollection =  manuallyAnalyzeGithubJson(githubJson);
+
+        //Ai service____________
+        RepoSummaryDtoCollection aiCompletedCollection =  geminiAiService.generateContent(githubJson);
         handleSuccessfulRequest(request.apiKey());
-        return repoAnalysisDtoList;
+        return aiCompletedCollection;
+    }
+
+    private RepoSummaryDtoCollection manuallyAnalyzeGithubJson(ArrayList<ObjectNode> githubJson) {
+        for (ObjectNode json:githubJson){
+
+        }
+        return null;
     }
 
     private void handleSuccessfulRequest(ApiKey apikey){
