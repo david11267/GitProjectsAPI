@@ -16,7 +16,7 @@ public class ApiKeyService {
     }
 
     public ApiKey validateAndGetApiKey(UUID apiKey){
-        ApiKey key = apiKeyRepository.findDistinctById(apiKey);
+        ApiKey key = apiKeyRepository.findDistinctByKey(apiKey);
         if (key == null) throw new InvalidApiKeyException(apiKey.toString());
         return key;
     }

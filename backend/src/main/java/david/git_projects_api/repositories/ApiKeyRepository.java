@@ -10,4 +10,6 @@ public interface ApiKeyRepository extends JpaRepository<ApiKey, UUID> {
     List<ApiKey> findApiKeyById(UUID id);
 
     ApiKey findDistinctById(UUID id);
+
+    ApiKey findDistinctByKey(UUID key);
 }

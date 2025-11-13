@@ -19,8 +19,9 @@ public class GithubApiService {
 
     private static final String githubToken = System.getenv("Github_Token");
 
-    public ArrayList<ObjectNode> handleGithubFetches(ProjectsRequest request, String githubUsername) throws IOException, InterruptedException {
+    public ArrayList<ObjectNode> handleGithubFetches(ProjectsRequest request) throws IOException, InterruptedException {
        ArrayList<ObjectNode> fullDataList = new ArrayList<>();
+       String githubUsername = request.apiKey().getUser().getUsername();
 
         for(String repoName:request.repos()){
         String repoUrl = buildGithubUrl(repoName, githubUsername);
