@@ -5,7 +5,6 @@ import david.git_projects_api.domain.User;
 import david.git_projects_api.dtos.ProjectsRequest;
 import david.git_projects_api.dtos.RepoSummaryDtoCollection;
 import david.git_projects_api.dtos.UserDto;
-import david.git_projects_api.exceptions.InvalidApiKeyException;
 import david.git_projects_api.services.ApiKeyService;
 import david.git_projects_api.services.ProjectsService;
 import david.git_projects_api.services.UserService;

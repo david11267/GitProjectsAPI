@@ -22,16 +22,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getStatus()).body(error);
     }
 
-    @ExceptionHandler(InvalidApiKeyException.class)
-    public ResponseEntity<Map<String, Object>> handleInvalidApiKey(InvalidApiKeyException ex) {
-        Map<String, Object> error = new LinkedHashMap<>();
-        error.put("error", "Invalid API key");
-        error.put("message", ex.getMessage());
-        error.put("status", HttpStatus.BAD_REQUEST.value());
-        error.put("timestamp", LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-    }
-
 
     @ExceptionHandler(GitHubRateLimitException.class)
     public ResponseEntity<ObjectNode> handleGithubRateLimit(GitHubRateLimitException ex) {

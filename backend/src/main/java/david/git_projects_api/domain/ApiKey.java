@@ -1,12 +1,13 @@
 package david.git_projects_api.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import david.git_projects_api.domain.TimeStamps.ApiTimestamp;
+import david.git_projects_api.exceptions.ApiException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import java.time.Instant;
+import org.springframework.http.HttpStatus;
+
 import java.util.*;
 
 @Getter
@@ -35,5 +36,13 @@ public class ApiKey {
         this.quota = 10;
         this.enableAi = true;
         this.timestamps.add(new ApiTimestamp("Initialized api key",this));
+    }
+
+    public void consumeQuota(){
+        this.setQuota(quota-1);
+    }
+
+    public void validateQuota(){
+        if (this.quota <= 0) throw new ApiException("you are out of requests. Either buy increased quota or wait until tomorrow", HttpStatus.PAYMENT_REQUIRED);
     }
 }
