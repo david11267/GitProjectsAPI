@@ -5,10 +5,9 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
+import com.google.genai.types.*;
 import com.google.genai.Client;
-import com.google.genai.types.GenerateContentResponse;
+import com.google.genai.types.Schema;
 import david.git_projects_api.dtos.RepoSummaryDtoCollection;
 import david.git_projects_api.exceptions.ApiException;
 import org.springframework.http.HttpStatus;
@@ -86,7 +85,15 @@ public class GeminiAiService {
             """.formatted(schema, repoDataJson);
 
             GenerateContentResponse response = client.models
-                    .generateContent("gemini-2.5-flash", instructionPrompt,null);
+                    .generateContent("gemini-2.5-flash", instructionPrompt, GenerateContentConfig.builder()
+                            .responseMimeType("application/json")
+                            .temperature(0.05f)
+                            .topK(20f)
+                            .topP(0.8f)
+                            .candidateCount(1)
+                            .maxOutputTokens(8192)
+                            .build()
+                    );
 
             String parsedJson = response.text()
                     .trim()

@@ -81,9 +81,6 @@ public class GithubApiService {
         });
         root.set("tree", files);
 
-
-
-
         // Optional: README summary placeholder (we can add real summarization next)
         JsonNode readme = fetchJson(client, mapper, base + "/readme");
         if (readme.has("content")) {
