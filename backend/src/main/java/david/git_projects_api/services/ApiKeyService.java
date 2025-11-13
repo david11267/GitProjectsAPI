@@ -1,6 +1,7 @@
 package david.git_projects_api.services;
 
 import david.git_projects_api.domain.ApiKey;
+import david.git_projects_api.exceptions.InvalidApiKeyException;
 import david.git_projects_api.repositories.ApiKeyRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,9 @@ public class ApiKeyService {
         this.apiKeyRepository = apiKeyRepository;
     }
 
-    public void validate(UUID apiKey){
+    public ApiKey validateAndGetApiKey(UUID apiKey){
         ApiKey key = apiKeyRepository.findDistinctById(apiKey);
+        if (key == null) throw new InvalidApiKeyException(apiKey.toString());
+        return key;
     }
 }

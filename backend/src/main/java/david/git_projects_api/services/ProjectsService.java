@@ -1,5 +1,6 @@
 package david.git_projects_api.services;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import david.git_projects_api.domain.ApiKey;
 import david.git_projects_api.domain.TimeStamps.ApiTimestamp;
 import david.git_projects_api.domain.User;
 import david.git_projects_api.dtos.ProjectsRequest;
@@ -30,8 +31,14 @@ public class ProjectsService {
         ArrayList<ObjectNode> rawJson =  githubApiService.handleGithubFetches(request, user.getUsername());
 
         RepoSummaryDtoCollection repoAnalysisDtoList =  geminiAiService.generateContent(rawJson);
-        timestampService.createTimestamp(new ApiTimestamp("API handled projects request",user.getApikey()));
+        handleSuccessfulRequest(user.getApikey());
         return repoAnalysisDtoList;
+    }
+
+    private void handleSuccessfulRequest(ApiKey apikey){
+        timestampService.createTimestamp(new ApiTimestamp("API handled projects request",apikey));
+
+
     }
 }
 

@@ -6,8 +6,8 @@ import david.git_projects_api.dtos.ProjectsRequest;
 import david.git_projects_api.dtos.RepoSummaryDtoCollection;
 import david.git_projects_api.dtos.UserDto;
 import david.git_projects_api.exceptions.InvalidApiKeyException;
+import david.git_projects_api.services.ApiKeyService;
 import david.git_projects_api.services.ProjectsService;
-import david.git_projects_api.services.TimestampService;
 import david.git_projects_api.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,18 +23,19 @@ import java.util.UUID;
 public class GitProfileController {
     UserService userService;
     ProjectsService projectsService;
-    public GitProfileController(UserService userService, ProjectsService projectsService) {
+    ApiKeyService apiKeyService;
+    public GitProfileController(UserService userService, ProjectsService projectsService,ApiKeyService apiKeyService) {
         this.userService = userService;
         this.projectsService = projectsService;
+        this.apiKeyService= apiKeyService;
     }
 
     @PostMapping("/projects")
     public ResponseEntity<?> getProjects(
             @RequestBody ArrayList<String> repos,
-            @RequestHeader("apiKey") String apiKey) throws IOException, InterruptedException {
-        if (!userService.validateUserApiKey(apiKey)) throw new InvalidApiKeyException(apiKey);
-
-        RepoSummaryDtoCollection result =projectsService.handleProjectsRequest(new ProjectsRequest(UUID.fromString(apiKey),repos));
+            @RequestHeader("apiKey") String key) throws IOException, InterruptedException {
+        ApiKey apiKey = apiKeyService.validateAndGetApiKey(UUID.fromString(key));
+        RepoSummaryDtoCollection result =projectsService.handleProjectsRequest(new ProjectsRequest(apiKey,repos));
         return ResponseEntity.ok().body(result);
 
     }

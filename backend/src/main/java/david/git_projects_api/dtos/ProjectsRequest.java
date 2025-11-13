@@ -1,7 +1,8 @@
 package david.git_projects_api.dtos;
 
-import java.util.ArrayList;
-import java.util.UUID;
+import david.git_projects_api.domain.ApiKey;
 
-public record ProjectsRequest(UUID apiKey, ArrayList<String> repos) {
+import java.util.ArrayList;
+
+public record ProjectsRequest(ApiKey apiKey, ArrayList<String> repos) {
 }
