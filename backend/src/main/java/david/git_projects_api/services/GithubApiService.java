@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import david.git_projects_api.dtos.ProjectsRequest;
+import david.git_projects_api.exceptions.ApiException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,7 +21,7 @@ public class GithubApiService {
 
     private static final String githubToken = System.getenv("Github_Token");
 
-    public ArrayList<ObjectNode> handleGithubFetches(ProjectsRequest request) throws IOException, InterruptedException {
+    public ArrayList<ObjectNode> handleGithubFetches(ProjectsRequest request) {
        ArrayList<ObjectNode> fullDataList = new ArrayList<>();
        String githubUsername = request.apiKey().getUser().getUsername();
 
@@ -38,20 +40,20 @@ public class GithubApiService {
         return baseApiUrl + "/" + repoName;
     }
 
-    public static String fetchLastBranch(String url) throws IOException, InterruptedException {
-        var client = HttpClient.newHttpClient();
-        var mapper = new ObjectMapper();
-
-        // 2️⃣ Fetch all branches
-        String branchesUrl = url + "/branches";
-        var branchRequest = HttpRequest.newBuilder(URI.create(branchesUrl)).GET()
+    public static String fetchLastBranch(String url){
+        HttpClient client = HttpClient.newHttpClient();
+        ObjectMapper mapper = new ObjectMapper();
+        HttpRequest branchRequest = HttpRequest.newBuilder(URI.create(url + "/branches")).GET()
                 .header("Authorization", "token " +githubToken).build();
-        var branchResponse = client.send(branchRequest, HttpResponse.BodyHandlers.ofString());
-        JsonNode branchJson = mapper.readTree(branchResponse.body());
-
-        return branchJson.get(branchJson.size() - 1)
-                .get("name")
-                .asText();
+        try {
+            HttpResponse<String> branchResponse = client.send(branchRequest, HttpResponse.BodyHandlers.ofString());
+            JsonNode branchJson = mapper.readTree(branchResponse.body());
+            return branchJson.get(branchJson.size() - 1)
+                    .get("name")
+                    .asText();
+        } catch (InterruptedException | IOException e) {
+            throw new ApiException("There was a problem with the github branch request and parsing if it's result ", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public static ObjectNode extractRepoSummary(String owner, String repoName, String branch) {
