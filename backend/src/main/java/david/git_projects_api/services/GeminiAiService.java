@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 @Service
 public class GeminiAiService {
@@ -43,21 +44,7 @@ public class GeminiAiService {
             // Convert list of ObjectNodes into a JSON array string
             String repoDataJson = objectMapper.writeValueAsString(rawJson);
 
-            String schema = """
-            {
-              "repoSummaryDtoCollections": [
-                {
-                  "name": "string",
-                  "description": "string",
-                  "languages": ["string"],
-                  "frameworks": ["string"],
-                  "tools": ["string"],
-                  "architecture": "string",
-                  "deployment": "string"
-                }
-              ]
-            }
-            """;
+
 
             String instructionPrompt = """
             You are an expert software repository analysis model.
@@ -66,11 +53,11 @@ public class GeminiAiService {
             A JSON array describing one or more GitHub repositories. Each repository contains keys like "repo", "description", "languages", "tree", and "readme".
             
             Task:
+            Visit the repository yourself and examine each file.
             Infer and summarize each repository’s technologies, frameworks, architecture, build tools, dependencies, and integrations. Use folder names, file names, and extensions to detect frameworks and tools.
             
             Output:
-            Return a single JSON object with the key "repoSummaryDtoCollections". The value should be an array of objects strictly matching this schema:
-            %s
+            Return a single JSON object with the key "repoSummaryDtoCollections" that matches the configured schema exactly.
             
             Rules:
             - Respond ONLY with a valid JSON object starting with { and ending with }.
@@ -82,11 +69,13 @@ public class GeminiAiService {
             
             Repository data:
             %s
-            """.formatted(schema, repoDataJson);
+            """.formatted(repoDataJson);
 
+            Schema schema = RepoSummaryDtoCollection.getRepoSummaryCollectionSchema();
             GenerateContentResponse response = client.models
                     .generateContent("gemini-2.5-flash", instructionPrompt, GenerateContentConfig.builder()
                             .responseMimeType("application/json")
+                            .responseSchema(schema)
                             .temperature(0.05f)
                             .topK(20f)
                             .topP(0.8f)
