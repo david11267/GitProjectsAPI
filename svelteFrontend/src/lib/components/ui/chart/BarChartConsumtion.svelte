@@ -18,9 +18,9 @@
 	const chartData = [
 		{
 			month: 'January',
-			consumed: apiCalls.filter((t) => t.timestamp.getMonth() === 0).length.toFixed()
+			consumed: apiCalls.filter((t) => t.timestamp.getMonth() === 0).length
 		},
-		{ month: 'February', consumed: apiCalls.filter((t) => t.timestamp.getMonth() === 1).length },
+		{ month: 'February', consumed: 1 },
 		{ month: 'March', consumed: apiCalls.filter((t) => t.timestamp.getMonth() === 2).length },
 		{ month: 'April', consumed: apiCalls.filter((t) => t.timestamp.getMonth() === 3).length },
 		{ month: 'May', consumed: apiCalls.filter((t) => t.timestamp.getMonth() === 4).length },

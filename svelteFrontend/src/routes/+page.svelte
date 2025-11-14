@@ -31,12 +31,12 @@
 
 		<Container class="col-span-4">
 			<Card class=" max-h-[500px] overflow-y-scroll  font-mono">
-				<p>Api key usage timeline graph</p>
-				<ul>
+				<h2>Api key usage timeline graph</h2>
+				<l1 class="p-4">
 					{#each apiKey.timestamps as { action, timestamp }}
 						<li>{action}: {timestamp}</li>
 					{/each}
-				</ul>
+				</l1>
 			</Card>
 		</Container>
 	{/if}
