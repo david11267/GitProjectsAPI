@@ -20,7 +20,7 @@
 			month: 'January',
 			consumed: apiCalls.filter((t) => t.timestamp.getMonth() === 0).length
 		},
-		{ month: 'February', consumed: 1 },
+		{ month: 'February', consumed: apiCalls.filter((t) => t.timestamp.getMonth() === 1).length },
 		{ month: 'March', consumed: apiCalls.filter((t) => t.timestamp.getMonth() === 2).length },
 		{ month: 'April', consumed: apiCalls.filter((t) => t.timestamp.getMonth() === 3).length },
 		{ month: 'May', consumed: apiCalls.filter((t) => t.timestamp.getMonth() === 4).length },
