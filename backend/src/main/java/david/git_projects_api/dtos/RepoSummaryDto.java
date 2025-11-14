@@ -3,15 +3,16 @@ package david.git_projects_api.dtos;
 import lombok.Data;
 
 import java.util.List;
-
+@Data
 public class RepoSummaryDto {
-        public String name;
-        public String description;
-        public List<Technology> languages;
-        public List<Technology> frameworks;
-        public List<Technology> tools;
-        public String architecture;
-        public String deployment;
+        private String name;
+        private String html_url;
+        private String description;
+        private List<Technology> languages;
+        private List<Technology> frameworks;
+        private List<Technology> tools;
+        private String architecture;
+        private String deployment;
 }
 @Data
 class Technology{

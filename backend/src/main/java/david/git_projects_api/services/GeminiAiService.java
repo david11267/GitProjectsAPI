@@ -53,8 +53,9 @@ public class GeminiAiService {
             A JSON array describing one or more GitHub repositories. Each repository contains keys like "repo", "description", "languages", "tree", and "readme".
             
             Task:
-            Visit the repository yourself and examine each file.
             Infer and summarize each repository’s technologies, frameworks, architecture, build tools, dependencies, and integrations. Use folder names, file names, and extensions to detect frameworks and tools.
+            
+            Icons: Provide me with valid icon urls for the technology from https://cdn.jsdelivr.net if unable to do so pick a generic icon relevant to the technology but still from https://cdn.jsdelivr.net. You dont know about the technology just make the icon: "".
             
             Output:
             Return a single JSON object with the key "repoSummaryDtoCollections" that matches the configured schema exactly.

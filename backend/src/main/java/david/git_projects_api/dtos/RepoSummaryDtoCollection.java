@@ -24,6 +24,7 @@ import java.util.Map;
                     .type("object")
                     .properties(Map.of(
                             "name", Schema.builder().type("string").description("Repository name").build(),
+                            "html_url", Schema.builder().type("string").description("Public repository url").build(),
                             "description", Schema.builder().type("string").description("Repository description").build(),
 
                             "languages", Schema.builder()
