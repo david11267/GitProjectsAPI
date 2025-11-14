@@ -10,6 +10,7 @@
 		<Container>No API key available</Container>
 	{:else}
 		<Container class="col-span-2"><p>Api key: {apiKey.key}</p></Container>
+		<Container class="col-span-2"><p>Api key: {apiKey.key}</p></Container>
 		<Container class="col-span-2"><p>Remaining api calls {apiKey.quota}</p></Container>
 		<Container class="col-span-4 row-span-2">
 			<p>Api key usage timeline graph</p>
