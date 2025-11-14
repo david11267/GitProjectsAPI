@@ -5,6 +5,6 @@
 	let { children, class: className = '', ...rest } = $props();
 </script>
 
-<div class={`p-4 shadow-2xl backdrop-blur-md backdrop-contrast-90 ${className}`} {...rest}>
+<div class={`${className} `} {...rest}>
 	{@render children?.()}
 </div>
