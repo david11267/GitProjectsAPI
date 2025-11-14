@@ -27,8 +27,7 @@ public class CorsConfig {
         // DO NOT use "*" if you will allow credentials. Use exact origin(s).
         // Always allow production frontend
         config.setAllowedOrigins(Arrays.asList(
-                frontendUrl
-        ));
+                frontendUrl));
 
         // Only add localhost origins in dev mode
         if ("dev".equals(activeProfile)) {
@@ -37,7 +36,7 @@ public class CorsConfig {
                     "http://localhost:5173"
             ));
         }        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "apiKey"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
 
