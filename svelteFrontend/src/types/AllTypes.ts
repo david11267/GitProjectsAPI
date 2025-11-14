@@ -5,7 +5,6 @@ export type ApiKey = {
 	issuedAt: string; // Instant → ISO timestamp string
 	user?: User; // Optional because you might not always include it in responses
 	timestamps: Array<Timestamp>;
-	enableAi: boolean;
 };
 
 type User = {

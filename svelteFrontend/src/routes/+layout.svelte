@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import { ClerkProvider } from 'svelte-clerk';
+	import { ClerkProvider, SignIn } from 'svelte-clerk';
 	import { SignedIn, SignedOut, SignInButton, UserButton } from 'svelte-clerk';
 
 	let { children } = $props();
@@ -15,7 +15,7 @@
 <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
 	<div class="flex min-h-screen w-full items-center justify-center bg-gray-900">
 		<SignedOut>
-			<SignInButton />
+			<SignIn />
 		</SignedOut>
 		<SignedIn>
 			<div>

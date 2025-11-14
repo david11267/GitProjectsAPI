@@ -9,9 +9,9 @@
 	{#if !apiKey}
 		<Container>No API key available</Container>
 	{:else}
-		<Container><p>Api key: {apiKey.key}</p></Container>
-		<Container><p>Remaining api calls {apiKey.quota}</p></Container>
-		<Container class="col-span-2 row-span-2">
+		<Container class="col-span-2"><p>Api key: {apiKey.key}</p></Container>
+		<Container class="col-span-2"><p>Remaining api calls {apiKey.quota}</p></Container>
+		<Container class="col-span-4 row-span-2">
 			<p>Api key usage timeline graph</p>
 			<ul>
 				{#each apiKey.timestamps as { action, timestamp }}
@@ -19,14 +19,5 @@
 				{/each}
 			</ul>
 		</Container>
-		<Container class="col-span-2">
-			<p>Api key options</p>
-			<label class="cursor-pointer" for="enableAi">EnableAi:</label>
-			<input id="enableAi" bind:checked={apiKey.enableAi} type="checkbox" />
-		</Container>
 	{/if}
-</div>
-
-<div class="flex justify-center">
-	<button class="m-4 cursor-pointer bg-gray-500 p-4">save changes</button>
 </div>
