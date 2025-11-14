@@ -16,7 +16,7 @@
 
 <Card.Root>
 	<Card.Header class="items-center">
-		<Card.Title>Api budget chart</Card.Title>
+		<h2>Api budget chart</h2>
 		<Card.Description>Showing total Api budget consumed</Card.Description>
 	</Card.Header>
 	<Card.Content class="flex-1">

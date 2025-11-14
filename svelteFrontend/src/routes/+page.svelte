@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Container from '$lib/components/Container.svelte';
-	import { Card } from '$lib/components/ui/card/index.js';
+	import { Card, Root } from '$lib/components/ui/card/index.js';
 	import ChartCounter from '$lib/components/ui/chart/ChartCounter.svelte';
 	import type { ApiKey } from '../types/AllTypes.js';
 
@@ -11,7 +11,7 @@
 <div class="grid grid-cols-4 gap-4 text-white">
 	{#if !apiKey}
 		<Container class="col-span-4">
-			<Card class=" text-center text-2xl text-red-500"><h1>No api key available</h1></Card>
+			<Card><h1 class=" text-red-500">No api key available</h1></Card>
 		</Container>
 	{:else}
 		<Container class="col-span-4"
@@ -21,7 +21,9 @@
 			></Container
 		>
 		<Container class="col-span-2"><ChartCounter count={5} budget={10} /></Container>
-		<Container class="col-span-2"><Card>OPTIONS</Card></Container>
+		<Container class="col-span-2">
+			<Card><h2>Options</h2></Card>
+		</Container>
 		<Container class="col-span-4"><Card>USAGE GRAPH</Card></Container>
 
 		<Container class="col-span-4">
