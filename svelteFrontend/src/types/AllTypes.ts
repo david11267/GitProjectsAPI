@@ -7,7 +7,7 @@ export type ApiKey = {
 	timestamps: Array<Timestamp>;
 };
 
-type User = {
+export type User = {
 	id: string;
 	name: string;
 	surname: string;
@@ -16,7 +16,7 @@ type User = {
 	profileImage?: string;
 };
 
-type Timestamp = {
+export type Timestamp = {
 	id: number;
 	action: string;
 	timestamp: string; // ISO string

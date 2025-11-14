@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Container from '../components/Container.svelte';
+	import Container from '$lib/components/Container.svelte';
 
 	export let data;
 	const { apiKey } = data;
