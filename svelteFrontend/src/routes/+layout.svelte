@@ -13,7 +13,7 @@
 </svelte:head>
 
 <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
-	<div class="flex min-h-screen w-full items-center justify-center bg-gray-900">
+	<div class="flex min-h-screen w-full items-center justify-center bg-black">
 		<SignedOut>
 			<SignIn />
 		</SignedOut>

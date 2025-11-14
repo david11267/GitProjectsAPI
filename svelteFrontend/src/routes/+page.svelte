@@ -1,4 +1,5 @@
 <script lang="ts">
+	import BarChartConsumtion from './../lib/components/ui/chart/BarChartConsumtion.svelte';
 	import Container from '$lib/components/Container.svelte';
 	import { Card, Root } from '$lib/components/ui/card/index.js';
 	import ChartCounter from '$lib/components/ui/chart/ChartCounter.svelte';
@@ -20,14 +21,16 @@
 				<p class="text-center font-bold">{apiKey.key}</p></Card
 			></Container
 		>
-		<Container class="col-span-2"><ChartCounter count={5} budget={10} /></Container>
+		<Container class="col-span-2"><ChartCounter count={apiKey.quota} budget={10} /></Container>
 		<Container class="col-span-2">
 			<Card><h2>Options</h2></Card>
 		</Container>
-		<Container class="col-span-4"><Card>USAGE GRAPH</Card></Container>
+		<Container class="col-span-4">
+			<BarChartConsumtion timestamps={apiKey.timestamps} />
+		</Container>
 
 		<Container class="col-span-4">
-			<Card class=" h-[404px] overflow-y-scroll  font-mono">
+			<Card class=" max-h-[500px] overflow-y-scroll  font-mono">
 				<p>Api key usage timeline graph</p>
 				<ul>
 					{#each apiKey.timestamps as { action, timestamp }}

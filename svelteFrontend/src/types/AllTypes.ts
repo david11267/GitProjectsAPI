@@ -19,5 +19,5 @@ export type User = {
 export type Timestamp = {
 	id: number;
 	action: string;
-	timestamp: string; // ISO string
+	timestamp: Date; // ISO string
 };
