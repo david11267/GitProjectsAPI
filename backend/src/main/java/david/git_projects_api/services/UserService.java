@@ -23,14 +23,4 @@ public  class UserService {
         }
         return user;
     }
-
-    public User getOrCreateUser(UUID apiKey){
-        return  userRepositorty.getUsersByApikey_Key(apiKey);
-    }
-
-
-    public boolean validateUserApiKey(String apiKey) {
-        UUID key = UUID.fromString(apiKey);
-        return userRepositorty.existsByApikey_Key(key);
-    }
 }
