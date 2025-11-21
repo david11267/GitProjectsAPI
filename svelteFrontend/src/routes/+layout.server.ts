@@ -33,3 +33,4 @@ export const load: LayoutServerLoad = async ({ locals, fetch }) => {
 		...buildClerkProps(locals.auth())
 	};
 };
+

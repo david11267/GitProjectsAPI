@@ -4,6 +4,7 @@
 	import { Card, Root } from '$lib/components/ui/card/index.js';
 	import ChartCounter from '$lib/components/ui/chart/ChartCounter.svelte';
 	import type { ApiKey } from '../types/AllTypes.js';
+	import Options from '$lib/components/Options.svelte';
 
 	export let data;
 	const { apiKey }: { apiKey: ApiKey } = data;
@@ -23,9 +24,7 @@
 			></Container
 		>
 		<Container class="col-span-2"><ChartCounter count={apiKey.quota} budget={10} /></Container>
-		<Container class="col-span-2">
-			<Card><h2>Options</h2></Card>
-		</Container>
+		<Options {apiKey} />
 		<Container class="col-span-4">
 			<BarChartConsumtion timestamps={apiKey.timestamps} />
 		</Container>
