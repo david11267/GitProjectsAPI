@@ -7,6 +7,7 @@
 
 	export let data;
 	const { apiKey }: { apiKey: ApiKey } = data;
+	apiKey.timestamps.reverse();
 </script>
 
 <div class="grid grid-cols-4 gap-4 text-white">
