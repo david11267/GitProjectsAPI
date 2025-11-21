@@ -39,7 +39,7 @@ public class GeminiAiService {
         System.out.println("🔑 Google Gemini client initialized successfully");
     }
 
-    public RepoSummaryDtoCollection generateContent(ArrayList<ObjectNode> rawJson) {
+    public RepoSummaryDtoCollection generateContent(ArrayList<ObjectNode> rawJson, String aiModel) {
         try {
             // Convert list of ObjectNodes into a JSON array string
             String repoDataJson = objectMapper.writeValueAsString(rawJson);
@@ -74,7 +74,7 @@ public class GeminiAiService {
 
             Schema schema = RepoSummaryDtoCollection.getRepoSummaryCollectionSchema();
             GenerateContentResponse response = client.models
-                    .generateContent("gemini-2.5-flash", instructionPrompt, GenerateContentConfig.builder()
+                    .generateContent(aiModel, instructionPrompt, GenerateContentConfig.builder()
                             .responseMimeType("application/json")
                             .responseSchema(schema)
                             .temperature(0.05f)

@@ -2,11 +2,13 @@ package david.git_projects_api.controllers;
 
 import david.git_projects_api.domain.ApiKey;
 import david.git_projects_api.domain.User;
+import david.git_projects_api.dtos.OptionsDto;
 import david.git_projects_api.dtos.ProjectsRequest;
 import david.git_projects_api.dtos.RepoSummaryDtoCollection;
 import david.git_projects_api.dtos.UserDto;
 import david.git_projects_api.services.ApiKeyService;
 import david.git_projects_api.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -16,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class GitProfileController {
@@ -48,6 +51,12 @@ public class GitProfileController {
         UserDto dto = UserDto.jwtToDto(jwt);
         User user = userService.getOrCreateUser(dto);
         return ResponseEntity.ok(user.getApikey());
+    }
+
+    @PutMapping("/options")
+    public ResponseEntity<?> updateKeyOptions(@AuthenticationPrincipal Jwt jwt, @RequestBody OptionsDto options) {
+        apiKeyService.updateKey(UUID.fromString(options.key()),options);
+        return ResponseEntity.ok(options);
     }
 
     @GetMapping("/health")
