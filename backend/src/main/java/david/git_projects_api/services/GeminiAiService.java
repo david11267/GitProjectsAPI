@@ -66,6 +66,7 @@ public class GeminiAiService {
             - No prose, no markdown, no code fences.
             - Do not explain reasoning or include extra fields.
             - Ensure JSON validity and consistent property naming.
+            -No null values allowed. Replace all null values with the status of the field instead.
             
             Repository data:
             %s
@@ -80,7 +81,7 @@ public class GeminiAiService {
                             .topK(20f)
                             .topP(0.8f)
                             .candidateCount(1)
-                            .maxOutputTokens(8192)
+                            .maxOutputTokens(1048576)
                             .build()
                     );
 
