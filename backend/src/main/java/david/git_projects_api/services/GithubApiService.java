@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import david.git_projects_api.domain.ApiKey;
 import david.git_projects_api.dtos.ProjectsRequest;
 import david.git_projects_api.exceptions.ApiException;
 import org.springframework.http.HttpStatus;
@@ -15,17 +16,22 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class GithubApiService {
 
     private static final String githubToken = System.getenv("Github_Token");
 
-    public ArrayList<ObjectNode> handleGithubFetches(ProjectsRequest request) {
+    public ArrayList<ObjectNode> handleGithubFetches(ApiKey apiKey) throws IOException, InterruptedException {
        ArrayList<ObjectNode> fullDataList = new ArrayList<>();
-       String githubUsername = request.apiKey().getUser().getUsername();
+       String githubUsername = apiKey.getUser().getUsername();
 
-        for(String repoName:request.repos()){
+
+       List<String> repos=  getAllRepos(githubUsername);
+        repos.removeAll(apiKey.getBlacklist());
+
+       for(String repoName:repos){
         String repoUrl = buildGithubUrl(repoName, githubUsername);
         String lastBranch =fetchLastBranch(repoUrl);
         ObjectNode fullData =  extractRepoSummary(githubUsername,repoName,lastBranch);
@@ -33,6 +39,36 @@ public class GithubApiService {
        }
 
         return fullDataList;
+    }
+
+    private List<String> getAllRepos(String username) throws IOException, InterruptedException {
+        ObjectMapper mapper = new ObjectMapper();
+        HttpClient client = HttpClient.newHttpClient();
+
+        // Added ?per_page=100 to get more results (default is 30)
+        String url = String.format("https://api.github.com/users/%s/repos?per_page=100", username);
+
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+                .GET()
+                .header("Authorization", "token " + githubToken)
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        JsonNode rootNode = mapper.readTree(response.body());
+        List<String> repoNames = new ArrayList<>();
+
+        // Check if the response is an array (it should be)
+        if (rootNode.isArray()) {
+            for (JsonNode repo : rootNode) {
+                // Extract the "name" field and add to list
+                if (repo.has("name")) {
+                    repoNames.add(repo.get("name").asText());
+                }
+            }
+        }
+
+        return repoNames;
     }
 
     public static String buildGithubUrl(String repoName, String githubUsername) {

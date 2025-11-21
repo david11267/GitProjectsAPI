@@ -6,7 +6,6 @@ public record OptionsDto(
         // @NotBlank(message = "AI Model is required")
         String aiModel,
         // @NotNull
-        List<String> blacklist,
+        List<String> blacklist
         // @NotNull
-        List<String> whitelist
 ) { }

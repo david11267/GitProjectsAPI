@@ -31,11 +31,6 @@ public class ApiKey {
     private String aiModel;
 
     @ElementCollection
-    @CollectionTable(name = "api_key_whitelist", joinColumns = @JoinColumn(name = "api_key_id"))
-    @Column(name = "value")
-    private List<String> whitelist = new ArrayList<>();
-
-    @ElementCollection
     @CollectionTable(name = "api_key_blacklist", joinColumns = @JoinColumn(name = "api_key_id"))
     @Column(name = "value")
     private List<String> blacklist = new ArrayList<>();
@@ -46,7 +41,6 @@ public class ApiKey {
         this.quota = 10;
         this.timestamps.add(new ApiTimestamp("Initialized api key",this));
         this.blacklist= new ArrayList<>();
-        this.whitelist= new ArrayList<>();
         this.aiModel = "gemini-2.5-flash";
     }
 

@@ -41,7 +41,6 @@ public class ApiKeyService {
         ApiKey apiKey = validateAndGetApiKey(key);
         apiKey.setAiModel(options.aiModel());
         apiKey.setBlacklist(options.blacklist());
-        apiKey.setWhitelist(options.whitelist());
 
         List<ApiTimestamp> timestamps = apiKey.getTimestamps();
         timestamps.add(new ApiTimestamp("Updated key", apiKey));
@@ -49,26 +48,16 @@ public class ApiKeyService {
 
         apiKeyRepository.save(apiKey);
     }
-    public RepoSummaryDtoCollection handleProjectsRequest(ProjectsRequest request) throws IOException, InterruptedException {
-        System.out.printf("""
-                Received request from API key: %s
-                Repos: %s
-                """, request.apiKey().getKey(),request.repos());
-        ArrayList<ObjectNode> githubJson =  githubApiService.handleGithubFetches(request);
-        RepoSummaryDtoCollection manuallyFilledCollection =  manuallyAnalyzeGithubJson(githubJson);
+    public RepoSummaryDtoCollection handleProjectsRequest(ApiKey apiKey) throws IOException, InterruptedException {
+
+        ArrayList<ObjectNode> githubJson =  githubApiService.handleGithubFetches(apiKey);
 
         //Ai service____________
-        RepoSummaryDtoCollection aiCompletedCollection =  geminiAiService.generateContent(githubJson,request.apiKey().getAiModel());
-        handleSuccessfulRequest(request.apiKey());
+        RepoSummaryDtoCollection aiCompletedCollection =  geminiAiService.generateContent(githubJson,apiKey.getAiModel());
+        handleSuccessfulRequest(apiKey);
         return aiCompletedCollection;
     }
 
-    private RepoSummaryDtoCollection manuallyAnalyzeGithubJson(ArrayList<ObjectNode> githubJson) {
-        for (ObjectNode json:githubJson){
-
-        }
-        return null;
-    }
 
     private void handleSuccessfulRequest(ApiKey apikey){
         timestampService.createTimestamp(new ApiTimestamp("API handled projects request",apikey));
