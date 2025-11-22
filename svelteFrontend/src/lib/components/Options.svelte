@@ -9,7 +9,7 @@
 
 	const models = [
 		{ value: 'gemini-2.5-flash', enabled: true },
-		{ value: 'gemini-3-pro-preview', enabled: true },
+		{ value: 'gemini-3-pro-preview', enabled: false },
 		{ value: 'gpt-5', enabled: false }
 	];
 
