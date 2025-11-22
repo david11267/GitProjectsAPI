@@ -46,31 +46,50 @@ public class GeminiAiService {
 
 
             String instructionPrompt = """
-            You are an expert software repository analysis model.
-            
-            Input:
-            A JSON array describing one or more GitHub repositories. Each repository contains keys like "repo", "description", "languages", "tree", and "readme".
-            
-            Task:
-            Infer and summarize each repository’s technologies, frameworks, architecture, build tools, dependencies, and integrations. Use folder names, file names, and extensions to detect frameworks and tools.
-            
-            Icons: Provide me with valid icon urls for the technology from https://cdn.jsdelivr.net if unable to do so pick a generic icon relevant to the technology but still from https://cdn.jsdelivr.net. You dont know about the technology just make the icon: "".
-            
-            Output:
-            Return a single JSON object with the key "repoSummaryDtoCollections" that matches the configured schema exactly.
-            
-            Rules:
-            - Respond ONLY with a valid JSON object starting with { and ending with }.
-            - Do NOT wrap the output in [], triple quotes, or any extra quotes.
-            - Do NOT use backticks (`) or other non-JSON symbols.
-            - No prose, no markdown, no code fences.
-            - Do not explain reasoning or include extra fields.
-            - Ensure JSON validity and consistent property naming.
-            -No null values allowed. Replace all null values with the status of the field instead.
-            
-            Repository data:
-            %s
-            """.formatted(repoDataJson);
+You analyze GitHub repositories and produce portfolio-quality project descriptions plus a complete technical summary.
+
+Input:
+A JSON array describing GitHub repositories. Each repository may include: repo, description, languages, tree, files, and readme.
+
+Goal:
+Produce a concise, compelling portfolio-style description for each project and fill every field of the existing schema I provide separately. Output must strictly follow the schema I send with the request.
+
+Portfolio text:
+- "name": just display the Github project name.
+- "description": 1–5 sentence high-quality description (clear, confident, professional; no filler).
+
+Technical inference:
+Identify technologies, frameworks, build tools, architecture patterns, runtimes, dependencies, integrations, and notable files. Infer from:
+- folder structure
+- filenames + extensions
+- manifest files (package.json, pom.xml, build.gradle, go.mod, requirements.txt, etc.)
+- CI configs
+- Dockerfiles
+- README content
+If information is missing, infer intelligently from project name or filenames and structure.
+
+Icon rules:
+Always return a valid https://cdn.jsdelivr.net icon URL.
+Priority:
+1. Devicon: https://cdn.jsdelivr.net/gh/devicons/devicon/icons/{name}/{name}-original.svg  
+2. Simple-icons: https://cdn.jsdelivr.net/npm/simple-icons@v8/icons/{name}.svg  
+3. Fallback generic code icon from jsDelivr.
+Never leave iconUrl empty.
+
+Strict rules:
+- Respond ONLY with valid JSON.
+- Start with "{" and end with "}".
+- Inside each string response 
+- No markdown, no backticks, no prose, no wrapping, no comments.
+- No null values anywhere. Use "unknown" or empty arrays as appropriate.
+- Only include the fields defined in the schema I supplied via the request.
+- Maintain consistent casing and naming.
+- Keep text compact but high quality.
+
+Repository data:
+%s
+""".formatted(repoDataJson);
+
 
             Schema schema = RepoSummaryDtoCollection.getRepoSummaryCollectionSchema();
             GenerateContentResponse response = client.models
