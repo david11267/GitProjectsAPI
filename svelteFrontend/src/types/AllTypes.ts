@@ -28,6 +28,5 @@ export type Timestamp = {
 export type Options = {
 	apiKey: string;
 	blacklist: Array<string>;
-	whitelist: Array<string>;
 	aiModel: string;
 };
