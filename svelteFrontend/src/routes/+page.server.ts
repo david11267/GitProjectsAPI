@@ -1,5 +1,6 @@
 import type { Actions } from './$types';
 import { fail } from '@sveltejs/kit';
+export const prerender = true;
 
 export const actions = {
 	update: async ({ locals, request }) => {
