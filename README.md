@@ -15,6 +15,4 @@ and finally the api responds with a list of project objects you can map out on y
 ## Quick start
 1. Register your account at: https://git-projects-api.vercel.app/
 2. Set your options
-3. Make a request: at : curl --location --request POST 'https://spring-backend-a4qk4.ondigitalocean.app/api/projects' \
---header 'apiKey: YOUR API KEY' \
---data ''
+3. Make a request: at : curl 'https://spring-backend-a4qk4.ondigitalocean.app/api/projects'
