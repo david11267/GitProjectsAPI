@@ -30,7 +30,7 @@ public class GitProfileController {
 
     @GetMapping("/projects")
     public ResponseEntity<?> getProjects(
-            @RequestHeader("apiKey") String key) throws IOException, InterruptedException {
+            @RequestParam("apiKey") String key) throws IOException, InterruptedException {
         ApiKey apiKey = apiKeyService.validateAndGetApiKey(UUID.fromString(key));
         RepoSummaryDtoCollection result = apiKeyService.handleProjectsRequest(apiKey);
         return ResponseEntity.ok().body(result);
