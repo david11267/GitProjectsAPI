@@ -11,6 +11,7 @@ export const load: LayoutServerLoad = async ({ locals, fetch }) => {
 
 	const token = await getToken({ template: 'GitProjectsAPIBackend' });
 	const baseUrl = import.meta.env.VITE_API_BASE_URL;
+	console.log('FETCHING API KEY from base url: ', baseUrl);
 	let apiKey = null;
 	try {
 		const res = await fetch(`${baseUrl}/api/key`, {
