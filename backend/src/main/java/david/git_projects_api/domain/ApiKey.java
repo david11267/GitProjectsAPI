@@ -2,6 +2,7 @@ package david.git_projects_api.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import david.git_projects_api.domain.TimeStamps.ApiTimestamp;
+import david.git_projects_api.dtos.RepoSummaryCollection;
 import david.git_projects_api.exceptions.ApiException;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -34,6 +35,7 @@ public class ApiKey {
     @CollectionTable(name = "api_key_blacklist", joinColumns = @JoinColumn(name = "api_key_id"))
     @Column(name = "value")
     private List<String> blacklist = new ArrayList<>();
+
 
     public ApiKey() {
         this.id = UUID.randomUUID();

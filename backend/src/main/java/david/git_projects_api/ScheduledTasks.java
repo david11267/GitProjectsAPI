@@ -23,7 +23,7 @@ public class ScheduledTasks {
 
     @Scheduled(cron = "0 0 2 * * *")
     public void cacheAllUserProjects() {
-        log.info("Caching all user projects");
+        log.info("Caching all user projects not yet implemented");
 
     }
 }

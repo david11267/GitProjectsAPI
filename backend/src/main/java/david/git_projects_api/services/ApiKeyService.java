@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import david.git_projects_api.domain.ApiKey;
 import david.git_projects_api.domain.TimeStamps.ApiTimestamp;
 import david.git_projects_api.dtos.OptionsDto;
-import david.git_projects_api.dtos.ProjectsRequest;
-import david.git_projects_api.dtos.RepoSummaryDtoCollection;
+import david.git_projects_api.dtos.RepoSummaryCollection;
 import david.git_projects_api.exceptions.ApiException;
 import david.git_projects_api.repositories.ApiKeyRepository;
 import org.springframework.http.HttpStatus;
@@ -48,18 +47,18 @@ public class ApiKeyService {
 
         apiKeyRepository.save(apiKey);
     }
-    public RepoSummaryDtoCollection handleProjectsRequest(UUID key) throws IOException, InterruptedException {
+    public RepoSummaryCollection handleProjectsRequest(UUID key) throws IOException, InterruptedException {
         ApiKey apiKey=validateAndGetApiKey(key);
         ArrayList<ObjectNode> githubJson =  githubApiService.handleGithubFetches(apiKey);
 
         //Ai service____________
-        RepoSummaryDtoCollection aiCompletedCollection =  geminiAiService.generateContent(githubJson,apiKey.getAiModel());
-        handleSuccessfulRequest(apiKey);
+        RepoSummaryCollection aiCompletedCollection =  geminiAiService.generateContent(githubJson,apiKey.getAiModel());
+        handleSuccessfulRequest(apiKey,aiCompletedCollection);
         return aiCompletedCollection;
     }
 
 
-    private void handleSuccessfulRequest(ApiKey apikey){
+    private void handleSuccessfulRequest(ApiKey apikey, RepoSummaryCollection aiCompletedCollection ){
         timestampService.createTimestamp(new ApiTimestamp("API handled projects request",apikey));
         apikey.consumeQuota();
         apiKeyRepository.save(apikey);

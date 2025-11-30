@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.genai.types.*;
 import com.google.genai.Client;
 import com.google.genai.types.Schema;
-import david.git_projects_api.dtos.RepoSummaryDtoCollection;
+import david.git_projects_api.dtos.RepoSummaryCollection;
 import david.git_projects_api.exceptions.ApiException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class GeminiAiService {
         System.out.println("🔑 Google Gemini client initialized successfully");
     }
 
-    public RepoSummaryDtoCollection generateContent(ArrayList<ObjectNode> rawJson, String aiModel) {
+    public RepoSummaryCollection generateContent(ArrayList<ObjectNode> rawJson, String aiModel) {
         try {
             // Convert list of ObjectNodes into a JSON array string
             String repoDataJson = objectMapper.writeValueAsString(rawJson);
@@ -91,7 +91,7 @@ Repository data:
 """.formatted(repoDataJson);
 
 
-            Schema schema = RepoSummaryDtoCollection.getRepoSummaryCollectionSchema();
+            Schema schema = RepoSummaryCollection.getRepoSummaryCollectionSchema();
             GenerateContentResponse response = client.models
                     .generateContent(aiModel, instructionPrompt, GenerateContentConfig.builder()
                             .responseMimeType("application/json")
@@ -110,8 +110,8 @@ Repository data:
                     .replaceAll("^[`]+|[`]+$", "")
                     .trim();
 
-            RepoSummaryDtoCollection dtoList = objectMapper.readValue(
-                    parsedJson, RepoSummaryDtoCollection.class
+            RepoSummaryCollection dtoList = objectMapper.readValue(
+                    parsedJson, RepoSummaryCollection.class
             );
 
             return dtoList;

@@ -3,8 +3,7 @@ package david.git_projects_api.controllers;
 import david.git_projects_api.domain.ApiKey;
 import david.git_projects_api.domain.User;
 import david.git_projects_api.dtos.OptionsDto;
-import david.git_projects_api.dtos.ProjectsRequest;
-import david.git_projects_api.dtos.RepoSummaryDtoCollection;
+import david.git_projects_api.dtos.RepoSummaryCollection;
 import david.git_projects_api.dtos.UserDto;
 import david.git_projects_api.services.ApiKeyService;
 import david.git_projects_api.services.UserService;
@@ -31,7 +30,7 @@ public class GitProfileController {
     @PostMapping("/projects")
     public ResponseEntity<?> getProjects(
             @RequestHeader("apiKey") String key) throws IOException, InterruptedException {
-        RepoSummaryDtoCollection result = apiKeyService.handleProjectsRequest(UUID.fromString(key));
+        RepoSummaryCollection result = apiKeyService.handleProjectsRequest(UUID.fromString(key));
         return ResponseEntity.ok().body(result);
 
     }

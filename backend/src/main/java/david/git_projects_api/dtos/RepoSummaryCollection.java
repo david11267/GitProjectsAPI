@@ -4,7 +4,7 @@ import com.google.genai.types.Schema;
 import java.util.List;
 import java.util.Map;
 
-    public class RepoSummaryDtoCollection {
+    public class RepoSummaryCollection {
         public List<RepoSummaryDto> repoSummaryDtoCollections;
 
         public static Schema getTechnologySchema() {
