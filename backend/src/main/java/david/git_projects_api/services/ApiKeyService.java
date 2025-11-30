@@ -48,8 +48,8 @@ public class ApiKeyService {
 
         apiKeyRepository.save(apiKey);
     }
-    public RepoSummaryDtoCollection handleProjectsRequest(ApiKey apiKey) throws IOException, InterruptedException {
-
+    public RepoSummaryDtoCollection handleProjectsRequest(UUID key) throws IOException, InterruptedException {
+        ApiKey apiKey=validateAndGetApiKey(key);
         ArrayList<ObjectNode> githubJson =  githubApiService.handleGithubFetches(apiKey);
 
         //Ai service____________

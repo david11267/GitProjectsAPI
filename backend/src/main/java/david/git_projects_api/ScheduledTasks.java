@@ -16,8 +16,14 @@ public class ScheduledTasks {
     }
 
     @Scheduled(cron = "0 0 0 * * *")
-    public void reportCurrentTime() {
-        log.info("Resetting quota for all users");
-        apiKeyRepository.resetAllQuotas();
+    public void resetUserRequestBudgets() {
+        log.info("Resetting RequestBudget for all users");
+        apiKeyRepository.resetAllUserRequestBudgets();
+    }
+
+    @Scheduled(cron = "0 0 2 * * *")
+    public void cacheAllUserProjects() {
+        log.info("Caching all user projects");
+
     }
 }
