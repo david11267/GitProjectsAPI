@@ -7,6 +7,8 @@ import david.git_projects_api.exceptions.ApiException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.http.HttpStatus;
 
 import java.util.*;
@@ -36,6 +38,9 @@ public class ApiKey {
     @Column(name = "value")
     private List<String> blacklist = new ArrayList<>();
 
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "cached_results", columnDefinition = "jsonb") // Use "json" for MySQL, "jsonb" for Postgres
+    private RepoSummaryCollection cachedResults;
 
     public ApiKey() {
         this.id = UUID.randomUUID();

@@ -27,7 +27,7 @@ public class GitProfileController {
         this.apiKeyService= apiKeyService;
     }
 
-    @PostMapping("/projects")
+    @GetMapping("/projects")
     public ResponseEntity<?> getProjects(
             @RequestHeader("apiKey") String key) throws IOException, InterruptedException {
         RepoSummaryCollection result = apiKeyService.handleProjectsRequest(UUID.fromString(key));

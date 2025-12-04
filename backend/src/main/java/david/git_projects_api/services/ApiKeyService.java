@@ -61,6 +61,7 @@ public class ApiKeyService {
     private void handleSuccessfulRequest(ApiKey apikey, RepoSummaryCollection aiCompletedCollection ){
         timestampService.createTimestamp(new ApiTimestamp("API handled projects request",apikey));
         apikey.consumeQuota();
+        apikey.setCachedResults(aiCompletedCollection);
         apiKeyRepository.save(apikey);
     }
 }
