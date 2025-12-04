@@ -18,6 +18,6 @@ public interface ApiKeyRepository extends JpaRepository<ApiKey, UUID> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE ApiKey a SET a.quota = 10")
+    @Query("UPDATE ApiKey a SET a.quota = 11")
     void resetAllUserRequestBudgets();
 }
