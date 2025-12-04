@@ -28,6 +28,19 @@ public class ApiKeyService {
         this.timestampService= timestampService;
         this.apiKeyRepository = apiKeyRepository;
     }
+    public RepoSummaryCollection handleProjectsRequest(UUID key) throws IOException, InterruptedException {
+        ApiKey apiKey=validateAndGetApiKey(key);
+
+        if (apiKey.getCachedResults() != null)
+            return apiKey.getCachedResults();
+
+        ArrayList<ObjectNode> githubJson =  githubApiService.handleGithubFetches(apiKey);
+
+        //Ai service____________
+        RepoSummaryCollection aiCompletedCollection =  geminiAiService.generateContent(githubJson,apiKey.getAiModel());
+        handleSuccessfulRequest(apiKey,aiCompletedCollection);
+        return aiCompletedCollection;
+    }
 
     public ApiKey validateAndGetApiKey(UUID apiKey){
         ApiKey key = apiKeyRepository.findDistinctByKey(apiKey);
@@ -35,7 +48,6 @@ public class ApiKeyService {
         if (key == null) throw new ApiException("API key: "+apiKey+" was not found", HttpStatus.NOT_FOUND);
         return key;
     }
-
     public void updateKey(UUID key, OptionsDto options){
         ApiKey apiKey = validateAndGetApiKey(key);
         apiKey.setAiModel(options.aiModel());
@@ -47,17 +59,6 @@ public class ApiKeyService {
 
         apiKeyRepository.save(apiKey);
     }
-    public RepoSummaryCollection handleProjectsRequest(UUID key) throws IOException, InterruptedException {
-        ApiKey apiKey=validateAndGetApiKey(key);
-        ArrayList<ObjectNode> githubJson =  githubApiService.handleGithubFetches(apiKey);
-
-        //Ai service____________
-        RepoSummaryCollection aiCompletedCollection =  geminiAiService.generateContent(githubJson,apiKey.getAiModel());
-        handleSuccessfulRequest(apiKey,aiCompletedCollection);
-        return aiCompletedCollection;
-    }
-
-
     private void handleSuccessfulRequest(ApiKey apikey, RepoSummaryCollection aiCompletedCollection ){
         timestampService.createTimestamp(new ApiTimestamp("API handled projects request",apikey));
         apikey.consumeQuota();
