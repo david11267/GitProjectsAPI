@@ -28,12 +28,12 @@ public class ApiKey {
     @JsonBackReference
     private User user;
 
-    @OneToMany(mappedBy = "apiKey", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "apiKey", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<ApiTimestamp> timestamps = new ArrayList<>();
 
     private String aiModel;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "api_key_blacklist", joinColumns = @JoinColumn(name = "api_key_id"))
     @Column(name = "value")
     private List<String> blacklist = new ArrayList<>();
