@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import david.git_projects_api.domain.ApiKey;
 import david.git_projects_api.dtos.ProjectsRequest;
 import david.git_projects_api.exceptions.ApiException;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class GithubApiService {
-
     private static final String githubToken = System.getenv("Github_Token");
 
     public ArrayList<ObjectNode> handleGithubFetches(ApiKey apiKey) throws IOException, InterruptedException {
@@ -42,6 +45,7 @@ public class GithubApiService {
     }
 
     private List<String> getAllRepos(String username) throws IOException, InterruptedException {
+        log.info("fetching all repos for: "+username);
         ObjectMapper mapper = new ObjectMapper();
         HttpClient client = HttpClient.newHttpClient();
 

@@ -36,7 +36,7 @@ VALUES
 ('proj1', 3), -- Communication
 
 ('proj2', 2), -- Spring Boot
-('proj2', 3), -- Communication
+('pr    oj2', 3), -- Communication
 
 ('proj3', 1), -- Java
 ('proj3', 4); -- SQL

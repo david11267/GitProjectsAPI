@@ -7,6 +7,9 @@ import david.git_projects_api.dtos.OptionsDto;
 import david.git_projects_api.dtos.RepoSummaryCollection;
 import david.git_projects_api.exceptions.ApiException;
 import david.git_projects_api.repositories.ApiKeyRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class ApiKeyService {
     private final GithubApiService githubApiService;
@@ -45,7 +49,11 @@ public class ApiKeyService {
     public ApiKey validateAndGetApiKey(UUID apiKey){
         ApiKey key = apiKeyRepository.findDistinctByKey(apiKey);
         key.validateQuota();
-        if (key == null) throw new ApiException("API key: "+apiKey+" was not found", HttpStatus.NOT_FOUND);
+        if (key == null) {
+            log.error("Validation failed for api key: "+ apiKey.toString());
+            throw new ApiException("API key: "+apiKey+" was not found", HttpStatus.NOT_FOUND);
+        }
+        log.info("Validated api key: "+ apiKey.toString());
         return key;
     }
     public void updateKey(UUID key, OptionsDto options){
