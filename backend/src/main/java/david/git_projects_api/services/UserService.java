@@ -10,7 +10,6 @@ import java.util.UUID;
 @Service
 public  class UserService {
     private final UserRepositorty userRepositorty;
-    private
     public UserService(UserRepositorty userRepositorty) {
         this.userRepositorty = userRepositorty;
     }
