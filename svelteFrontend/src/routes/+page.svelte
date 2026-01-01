@@ -22,9 +22,8 @@
 				><h1 class="text-center text-xl">Api key</h1>
 				<p class="text-center font-bold">{apiKey.key}</p>
 				<strong>API Endpoint</strong>
-				<p>https://spring-backend-a4qk4.ondigitalocean.app/api/projects?apiKey={apiKey.key}</p>
-				</Card
-			></Container
+				<p>https://githubapibackend.davidaslan.dev/api/projects?apiKey={apiKey.key}</p>
+			</Card></Container
 		>
 		<Container class="col-span-2"><ChartCounter count={apiKey.quota} budget={10} /></Container>
 		<Options {apiKey} />
