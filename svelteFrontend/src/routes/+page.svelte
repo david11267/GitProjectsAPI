@@ -21,8 +21,10 @@
 			><Card
 				><h1 class="text-center text-xl">Api key</h1>
 				<p class="text-center font-bold">{apiKey.key}</p>
-				<strong>API Endpoint</strong>
-				<p>https://githubapibackend.davidaslan.dev/api/projects?apiKey={apiKey.key}</p>
+				<div class="flex justify-center mx-4">
+					<strong>API Endpoint (GET)</strong>
+				<a class="hover:underline" href="https://githubapibackend.davidaslan.dev/api/projects?apiKey={apiKey.key}">https://githubapibackend.davidaslan.dev/api/projects?apiKey={apiKey.key}</a>
+				</div>
 			</Card></Container
 		>
 		<Container class="col-span-2"><ChartCounter count={apiKey.quota} budget={10} /></Container>
