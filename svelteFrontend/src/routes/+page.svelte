@@ -1,10 +1,10 @@
 <script lang="ts">
 	import BarChartConsumtion from './../lib/components/ui/chart/BarChartConsumtion.svelte';
 	import Container from '$lib/components/Container.svelte';
-	import { Card, Root } from '$lib/components/ui/card/index.js';
+	import { Card } from '$lib/components/ui/card/index.js';
 	import ChartCounter from '$lib/components/ui/chart/ChartCounter.svelte';
-	import type { ApiKey } from '../types/AllTypes.js';
 	import Options from '$lib/components/Options.svelte';
+	import type { ApiKey } from '../types/AllTypes';
 
 	export let data;
 	const { apiKey }: { apiKey: ApiKey } = data;
@@ -18,12 +18,12 @@
 		</Container>
 	{:else}
 		<Container class="col-span-4"
-			><Card
-				><h1 class="text-center text-xl">Api key</h1>
-				<p class="text-center font-bold">{apiKey.key}</p>
-				<div class="flex justify-center mx-4">
-					<strong>API Endpoint (GET)</strong>
-				<a class="hover:underline" href="https://githubapibackend.davidaslan.dev/api/projects?apiKey={apiKey.key}">https://githubapibackend.davidaslan.dev/api/projects?apiKey={apiKey.key}</a>
+			><Card class=""
+				>
+				<p class="text-center font-bold">Test your ApiKey here</p>
+				<div class="justify-center space-x-4 ">
+				<strong><p>API Endpoint (GET)</p></strong>
+				<a class="underline" href="https://githubapibackend.davidaslan.dev/api/projects?apiKey={apiKey.key}">https://githubapibackend.davidaslan.dev/api/projects?apiKey={apiKey.key}</a>
 				</div>
 			</Card></Container
 		>

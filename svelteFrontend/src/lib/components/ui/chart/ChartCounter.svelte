@@ -16,8 +16,8 @@
 
 <Card.Root>
 	<Card.Header class="items-center">
-		<h2>Api budget chart</h2>
-		<Card.Description>Showing total Api budget consumed</Card.Description>
+		<h2>API AI budget chart</h2>
+		<Card.Description>Showing total API AI refresh budget consumed</Card.Description>
 	</Card.Header>
 	<Card.Content class="flex-1">
 		<Chart.Container config={chartConfig} class="mx-auto aspect-square max-h-[250px]">
@@ -54,7 +54,7 @@
 						dy={3}
 					/>
 					<Text
-						value="api calls left"
+						value="AI updates left"
 						textAnchor="middle"
 						verticalAnchor="middle"
 						class="fill-muted-foreground!"
@@ -66,7 +66,7 @@
 	</Card.Content>
 	<Card.Footer class="flex-col gap-2 text-sm">
 		<div class="flex items-center gap-2 leading-none text-muted-foreground">
-			Api budget refills every night at 00:00
+			API AI budget refills every night at 00:00
 		</div>
 	</Card.Footer>
 </Card.Root>
