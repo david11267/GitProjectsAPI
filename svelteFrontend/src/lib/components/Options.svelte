@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ApiKey } from '../../types/AllTypes';
 	import Container from './Container.svelte';
-	import { Card } from './ui/card';
+	import { Card, Description } from './ui/card';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import Input from './ui/input/input.svelte';
 	import { Button } from './ui/button';
@@ -51,8 +51,10 @@
 <Container class="col-span-2">
 	<Card class="p-4">
 		<h2>Options</h2>
+		<div class="flex">
+		<Description>Select AI model to analyze your repos with</Description>
 		<Select.Root type="single" name="aiModel" bind:value={aiModel}>
-			<Select.Trigger class="w-auto">
+			<Select.Trigger  class="w-auto">
 				{triggerContent}
 			</Select.Trigger>
 			<Select.Content>
@@ -66,9 +68,11 @@
 				</Select.Group>
 			</Select.Content>
 		</Select.Root>
+		</div>
 
 		<div class="mt-4 transition-all">
 			<div>
+				<Description>Select what repositories to exclude from analysis</Description>
 				<Input
 					type="text"
 					placeholder="Add to blacklist"
