@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { options } from './../../.svelte-kit/generated/server/internal.js';
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import { ClerkProvider, SignIn } from 'svelte-clerk';
-	import { SignedIn, SignedOut, SignInButton, UserButton } from 'svelte-clerk';
+	import { SignedIn, SignedOut, UserButton } from 'svelte-clerk';
 	import Card from '$lib/components/ui/card/card.svelte';
 
 	let { children } = $props();
