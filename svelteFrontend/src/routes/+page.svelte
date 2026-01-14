@@ -29,7 +29,11 @@
 				<div class="justify-center space-x-4 ">
 				<strong><p>API Endpoint (GET)</p></strong>
 				<a class="underline" href="https://githubapibackend.davidaslan.dev/api/projects?apiKey={apiKey.key}">https://githubapibackend.davidaslan.dev/api/projects?apiKey={apiKey.key}</a>
+				<strong><p>Manual Ai Cache refresh (GET)</p></strong>
+				<a class="underline" href="https://githubapibackend.davidaslan.dev/api/update?apiKey={apiKey.key}">https://githubapibackend.davidaslan.dev/api/update?apiKey={apiKey.key}</a>
 				</div>
+
+			
 			</Card></Container
 		>
 		<Container class="col-span-2"><ChartCounter count={apiKey.quota} budget={10} /></Container>
