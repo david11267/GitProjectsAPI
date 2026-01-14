@@ -32,10 +32,10 @@ public class ApiKeyService {
         this.timestampService= timestampService;
         this.apiKeyRepository = apiKeyRepository;
     }
-    public RepoSummaryCollection handleProjectsRequest(UUID key, Boolean chronJob) throws IOException, InterruptedException {
+    public RepoSummaryCollection handleProjectsRequest(UUID key, Boolean manualAiScrape) throws IOException, InterruptedException {
         ApiKey apiKey=validateAndGetApiKey(key);
 
-        if (apiKey.getCachedResults() != null && !chronJob)
+        if (apiKey.getCachedResults() != null && !manualAiScrape)
             return apiKey.getCachedResults();
 
         ArrayList<ObjectNode> githubJson =  githubApiService.handleGithubFetches(apiKey);
