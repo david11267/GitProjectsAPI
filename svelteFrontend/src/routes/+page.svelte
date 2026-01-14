@@ -6,21 +6,26 @@
 	import Options from '$lib/components/Options.svelte';
 	import type { ApiKey } from '../types/AllTypes';
 
-	export let data;
+  let { data } = $props();
+  let status = $state("Test your ApiKey here");
+  
 	const { apiKey }: { apiKey: ApiKey } = data;
 	apiKey.timestamps.reverse();
+
+	if (apiKey) {
+		if (apiKey) {
+			status = "✅ Your API key is valid";
+		} else {
+			status = "❌ No API key found please contact support";
+		}
+	}
 </script>
 
 <div class="grid grid-cols-4 gap-4 text-white">
-	{#if !apiKey}
-		<Container class="col-span-4">
-			<Card><h1 class=" text-red-500">No api key available</h1></Card>
-		</Container>
-	{:else}
 		<Container class="col-span-4"
 			><Card class=""
 				>
-				<p class="text-center font-bold">Test your ApiKey here</p>
+				<p class="text-center font-bold">{status}</p>
 				<div class="justify-center space-x-4 ">
 				<strong><p>API Endpoint (GET)</p></strong>
 				<a class="underline" href="https://githubapibackend.davidaslan.dev/api/projects?apiKey={apiKey.key}">https://githubapibackend.davidaslan.dev/api/projects?apiKey={apiKey.key}</a>
@@ -28,6 +33,7 @@
 			</Card></Container
 		>
 		<Container class="col-span-2"><ChartCounter count={apiKey.quota} budget={10} /></Container>
+		
 		<Options {apiKey} />
 		<Container class="col-span-4">
 			<BarChartConsumtion timestamps={apiKey.timestamps} />
@@ -43,5 +49,5 @@
 				</l1>
 			</Card>
 		</Container>
-	{/if}
+	
 </div>

@@ -51,35 +51,45 @@
 <Container class="col-span-2">
 	<Card class="p-4">
 		<h2>Options</h2>
-		<div class="flex">
-		<Description>Select AI model to analyze your repos with</Description>
-		<Select.Root type="single" name="aiModel" bind:value={aiModel}>
-			<Select.Trigger  class="w-auto">
-				{triggerContent}
-			</Select.Trigger>
-			<Select.Content>
-				<Select.Group>
-					<Select.Label>Models</Select.Label>
-					{#each models as model (model.value)}
-						<Select.Item value={model.value} label={model.value} disabled={!model.enabled}>
-							{model.value}
-						</Select.Item>
-					{/each}
-				</Select.Group>
-			</Select.Content>
-		</Select.Root>
+		<div>
+			<Description>Select AI model to analyze your repos with</Description>
+			<Select.Root type="single" name="aiModel" bind:value={aiModel}>
+				<Select.Trigger class="w-full">
+					{triggerContent}
+				</Select.Trigger>
+				<Select.Content>
+					<Select.Group>
+						<Select.Label>Models</Select.Label>
+						{#each models as model (model.value)}
+							<Select.Item value={model.value} label={model.value} disabled={!model.enabled}>
+								{model.value}
+							</Select.Item>
+						{/each}
+					</Select.Group>
+				</Select.Content>
+			</Select.Root>
 		</div>
 
 		<div class="mt-4 transition-all">
 			<div>
-				<Description>Select what repositories to exclude from analysis</Description>
-				<Input
-					type="text"
-					placeholder="Add to blacklist"
-					bind:value={newBlacklistItem}
-					onkeydown={(e) => e.key === 'Enter' && addListItem()}
-					class="max-w-xs"
-				/>
+				<Description>Select what repo names to exclude from analysis</Description>
+				<form
+					class="flex space-x-2"
+					onsubmit={(e) => {
+						e.preventDefault();
+						addListItem();
+					}}
+				>
+					<Input
+						type="text"
+						placeholder="Add to blacklist"
+						bind:value={newBlacklistItem}
+						class="max-w-xs"
+					/>
+
+					<Button type="submit">Add item</Button>
+				</form>
+
 				<div class="flex flex-col gap-1">
 					{#each blacklist as blackItem}
 						<button
@@ -97,7 +107,7 @@
 		<form method="POST" action="?/update" use:enhance>
 			<input type="hidden" name="optionsPayload" value={payload} />
 
-			<Button class="cursor-pointer" type="submit">Update options</Button>
+			<Button class="cursor-pointer" type="submit">Save options</Button>
 		</form>
 	</Card>
 </Container>
