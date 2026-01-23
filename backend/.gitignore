@@ -34,4 +34,5 @@ build/
 
 Dockerfile
 
-prod.env
+
+*.env

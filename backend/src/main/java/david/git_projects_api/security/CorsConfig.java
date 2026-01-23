@@ -13,9 +13,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @Configuration
 public class CorsConfig {
 
-    @Value("${spring.profiles.active}")
-    private String activeProfile;
-
     @Value("${FrontendUrl}")
     private String frontendUrl;
 

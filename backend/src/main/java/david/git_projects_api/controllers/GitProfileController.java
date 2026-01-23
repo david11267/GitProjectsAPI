@@ -49,6 +49,12 @@ public class GitProfileController {
         return ResponseEntity.ok(user.getApikey());
     }
 
+    @GetMapping("/update")
+    public ResponseEntity<RepoSummaryCollection> manualAiUpdate(@AuthenticationPrincipal Jwt jwt, @RequestParam("apiKey") String key) throws IOException, InterruptedException {
+        RepoSummaryCollection result = apiKeyService.handleProjectsRequest(UUID.fromString(key),true);
+        return ResponseEntity.ok(result);
+    }
+
     @PutMapping("/options")
     public ResponseEntity<?> updateKeyOptions(@AuthenticationPrincipal Jwt jwt, @RequestBody OptionsDto options) {
         apiKeyService.updateKey(UUID.fromString(options.key()),options);
